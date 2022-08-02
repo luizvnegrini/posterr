@@ -23,9 +23,6 @@ class AppVM extends IAppVM {
     }
     _hasRequestedLoading = true;
 
-    //dependencies
-    final sharedDependencies = SharedDependencies.load();
-
     final splashMinDuration =
         Future<dynamic>.delayed(const Duration(seconds: 1));
 
@@ -36,7 +33,7 @@ class AppVM extends IAppVM {
     ]);
 
     final appState = AppState(
-      sharedDependencies: sharedDependencies,
+      sharedDependencies: SharedDependencies.load(),
     );
 
     value = AsyncValue.data(appState);
