@@ -1,0 +1,17 @@
+name: design_system
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # MICROFRONTENDS
+  dependencies:
+    path: ../dependencies
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
+  

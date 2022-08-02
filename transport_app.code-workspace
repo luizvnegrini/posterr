@@ -1,0 +1,64 @@
+{
+	"folders": [		
+		{
+			"name": "main",
+			"path": "main"
+		},
+		{
+			"name": "shared",
+			"path": "shared"
+		},
+		{
+			"name": "design_system",
+			"path": "design_system"
+		},
+		{
+			"name": "auth",
+			"path": "auth"
+		},
+		{
+			"name": "dependencies",
+			"path": "dependencies"
+		},
+		{
+			"name": "onboarding",
+			"path": "onboarding"
+		},
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "dev",
+				"request": "launch",
+				"type": "dart",
+				"cwd": "${workspaceFolder:main}",
+				"program": "lib/main_dev.dart",
+				"showMemoryUsage": true,
+				"args": ["--flavor", "dev"]
+			},
+			{
+				"name": "hml",
+				"request": "launch",
+				"type": "dart",
+				"cwd": "${workspaceFolder:main}",
+				"program": "lib/main_hml.dart",
+				"showMemoryUsage": true,
+				"args": ["--flavor", "hml"]
+			},
+			{
+				"name": "prod",
+				"request": "launch",
+				"type": "dart",
+				"cwd": "${workspaceFolder:main}",
+				"program": "lib/main_prod.dart",
+				"showMemoryUsage": true,
+				"args": ["--flavor", "prod"]
+			}
+		]
+	},
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"java.configuration.updateBuildConfiguration": "automatic"
+	}
+}

@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "dev",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "main/lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
+        },
+        {
+            "name": "hml",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "main/lib/main_hml.dart",
+            "args": [
+                "--flavor",
+                "hml"
+            ]
+        },
+        {
+            "name": "prod",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "main/lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
+        },
+    ]
+}

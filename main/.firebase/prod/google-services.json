@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "376051576229",
+    "project_id": "transport-app-696e6",
+    "storage_bucket": "transport-app-696e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376051576229:android:7341f40515fe5283914c4c",
+        "android_client_info": {
+          "package_name": "com.transportapp.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu4FGeyKGP3Y2Oz6yyktnzSCcOVd3q0jY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "376051576229-3l37gml1ljiht7qr6pekahjakvial1f6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.transportapp.hml"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376051576229:android:858f26babb183c2b914c4c",
+        "android_client_info": {
+          "package_name": "com.transportapp.hml"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu4FGeyKGP3Y2Oz6yyktnzSCcOVd3q0jY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "376051576229-3l37gml1ljiht7qr6pekahjakvial1f6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.transportapp.hml"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376051576229:android:b6df49693b9622dd914c4c",
+        "android_client_info": {
+          "package_name": "com.transportapp.prod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu4FGeyKGP3Y2Oz6yyktnzSCcOVd3q0jY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376051576229-6r6p0jldavj2238cu9721nad6fbfsbdf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "376051576229-3l37gml1ljiht7qr6pekahjakvial1f6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.transportapp.hml"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

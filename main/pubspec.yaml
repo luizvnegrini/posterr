@@ -1,0 +1,84 @@
+name: transport_app
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 0.0.1+1
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter 
+
+  cupertino_icons: ^1.0.2
+
+  # MICROFRONTENDS
+  auth:
+    path: ../auth
+
+  dependencies:
+    path: ../dependencies
+
+  design_system:
+    path: ../design_system
+
+  onboarding:
+    path: ../onboarding
+
+  shared:
+    path: ../shared
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+  flutter_flavorizr: ^2.1.3
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
+# flutter pub run flutter_flavorizr
+flavorizr:
+  ide: vscode
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+    ios:
+
+  flavors:
+    dev:
+      app:
+        name: "Transport_app dev"
+      android:
+        applicationId: "com.transportapp.dev"
+        firebase:
+          config: ".firebase/dev/google-services.json"
+      ios:
+        bundleId: "com.transportapp.dev"
+        firebase:
+          config: ".firebase/dev/GoogleService-Info.plist"
+    hml:
+      app:
+        name: "Transport_app hml"
+      android:
+        applicationId: "com.transportapp.hml"
+        firebase:
+          config: ".firebase/hml/google-services.json"
+      ios:
+        bundleId: "com.transportapp.hml"
+        firebase:
+          config: ".firebase/hml/GoogleService-Info.plist"
+    prod:
+      app:
+        name: "Transport_app prod"
+      android:
+        applicationId: "com.transportapp.prod"
+        firebase:
+          config: ".firebase/prod/google-services.json"
+      ios:
+        bundleId: "com.transportapp.prod"
+        firebase:
+          config: ".firebase/prod/GoogleService-Info.plist"
