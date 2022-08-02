@@ -2,4 +2,4 @@
 
 FLUTTER_TARGET=lib/main_hml.dart
 ASSET_PREFIX=hml
-BUNDLE_NAME=Transport_app hml
+BUNDLE_NAME=posterr hml

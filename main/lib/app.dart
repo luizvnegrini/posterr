@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:onboarding/onboarding.dart';
 import 'package:shared/shared.dart';
 
 import 'app_vm.dart';
@@ -14,21 +12,13 @@ import 'flavors/flavors.dart';
 
 class Startup {
   static Future<void> run() async {
-    await configureErrorsOutsideOfFlutter();
+    WidgetsFlutterBinding.ensureInitialized();
+    await Future.wait(Core.initialize());
 
-    runZonedGuarded<Future<void>>(() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Future.wait(Core.initialize());
+    final vm = AppVM();
+    vm.loadDependencies();
 
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-      final vm = AppVM();
-      vm.loadDependencies();
-
-      runApp(_App(vm: vm));
-    },
-        (error, stack) =>
-            FirebaseCrashlytics.instance.recordError(error, stack));
+    runApp(_App(vm: vm));    
   }
 }
 
@@ -65,7 +55,6 @@ class _App extends StatelessWidget {
               child: Container(
                 color: Theme.of(context).colorScheme.onBackground,
                 child: const Center(
-                  ///TODO: alterar por alguma animação
                   child: Text('Alterar por uma imagem ou animação'),
                 ),
               ),
@@ -74,16 +63,6 @@ class _App extends StatelessWidget {
           ),
         ),
       );
-}
-
-Future<void> configureErrorsOutsideOfFlutter() async {
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last,
-    );
-  }).sendPort);
 }
 
 Widget _flavorBanner({
@@ -111,17 +90,16 @@ class AppLoadedRoot extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => MaterialApp(
-        title: 'Transport app',
+        title: 'Posterr',
         // home: _flavorBanner(child: const HomePage()),
         theme: ThemeData(
-          primarySwatch: Colors.green,
+          primarySwatch: Colors.orange,
           useMaterial3: true,
         ),
         initialRoute: '/',
         routes: <String, Widget Function(BuildContext)>{}..addEntries(
             [
               ...mainRoutes,
-              ...onboardingRoutes,
             ],
           ),
         scaffoldMessengerKey: useScaffoldMessenger(ref),

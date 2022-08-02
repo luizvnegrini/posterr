@@ -2,4 +2,4 @@
 
 FLUTTER_TARGET=lib/main_prod.dart
 ASSET_PREFIX=prod
-BUNDLE_NAME=Transport_app prod
+BUNDLE_NAME=posterr prod

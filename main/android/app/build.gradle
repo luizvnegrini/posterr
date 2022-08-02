@@ -35,18 +35,18 @@ android {
     productFlavors {
         dev {
             dimension "flavor-type"
-            applicationId "com.transportapp.dev"
-            resValue "string", "app_name", "Transport_app dev"
+            applicationId "com.posterr.dev"
+            resValue "string", "app_name", "Posterr dev"
         }
         hml {
             dimension "flavor-type"
-            applicationId "com.transportapp.hml"
-            resValue "string", "app_name", "Transport_app hml"
+            applicationId "com.posterr.hml"
+            resValue "string", "app_name", "Posterr hml"
         }
         prod {
             dimension "flavor-type"
-            applicationId "com.transportapp.prod"
-            resValue "string", "app_name", "Transport_app prod"
+            applicationId "com.posterr.prod"
+            resValue "string", "app_name", "Posterr prod"
         }
     }
 
@@ -70,7 +70,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.transport_app"
+        applicationId "com.example.posterr"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 23

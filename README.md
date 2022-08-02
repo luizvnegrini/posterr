@@ -1,17 +1,17 @@
-# transport_app
+# Posterr
 
-Novo projeto de app para transporte de encomendas.
+A new social media like Twitter.
 
 ## SETUP
 
 
 ### 1 Lefthook
 
-Utilizado para configurar Git Hooks no projeto. Realiza algumas checagens antes de commits ou pushes.
+Used to configure Git Hooks in the project. Performs some checks before commits or pushes.
 
-Documentação com manual de instalação [aqui.](https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md)
+Documentation with installation manual [here.](https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md)
 
-Após a instalação, acessar a raiz do projeto e executar:
+After installation, access the project root and run:
 
 ```bash
 lefthook install -f
@@ -19,100 +19,92 @@ lefthook install -f
 
 ### 2 Scripts
 
-Para facilitar algumas ações rotineiras, como por exemplo a execução de testes, foi criado um script para auxiliar na execução de algums comandos em todos os Micro Apps.
+To facilitate some routine actions, such as the execution of tests, a script was created to assist in the execution of some commands in all Micro Apps.
 
-Basta executar o arquivo `scripts.sh` para ter acesso à lista de comandos disponíveis.
+Just run the file `scripts.sh` to access the list of available commands.
 
-Alguns comandos requerem a instalação de programas adicionais, como por exemplo coverage e lcov:
+Some commands require the installation of additional programs, such as coverage and lcov:
 
 ```bash
 pub global activate coverage
 brew install lcov
 ```
 
-Para instalar o lcov no Windows utilizar
+To install lcov on Windows use
 
 ```bash
 choco install lcov
 ```
 
-Após clonar o projeto e rodar o script acima, pode ser executado um pub get através desse script:
+After cloning the project and running the above script, a pub get can be run through this script:
 
 ```bash
 ./scripts.sh --get
 ```
 
-Para mais comandos úteis:
+For more useful commands:
 ```bash
 ./scripts.sh --help
 ```
 
-## **3. Executando o projeto**
+## **3. Running the project**
 
-Para executar, levar em consideração os flavors `dev`, `hml` e `prod`.  
+To run, take into account the flavors `dev`, `hml` e `prod`.  
 
-Cada flavor possui um arquivo de configurações dentro da pasta `base_app/.env`.  
+Each flavor has a configuration file inside the folder `base_app/.env`.  
 
-Executar sempre da seguinte maneira:  
+Always run as follows:  
 
 ```bash
 cd base_app
 flutter run -t lib/main-<flavor>.dart --flavor <flavor> 
 ```
 
-[Mais detalhes sobre a integração com AllowMe aqui](flutter_allowme_plugin/README.md)
+### 3.1 Creating/editing flavors
 
-### 3.1 Criando/editando flavors
+For the creation of flavors, the package [flutter_flavorizr](https://github.com/AngeloAvv/flutter_flavorizr) was used.
 
-Para a criação dos flavors, foi utilizado o package [flutter_flavorizr](https://github.com/AngeloAvv/flutter_flavorizr).
-
-Seguir sua documentação para adição/edição dos flavors.
+Follow your documentation for adding/editing flavors.
 
 
-## **4. Testes**
+## **4. Tests**
 
-Para manter a organização, cada arquivo de teste deve ser criado na mesma estrutura de pastas do arquivo sendo testado. Exemplo:
+To maintain organization, each test file must be created in the same folder structure as the file being tested. Example:
 
 ```bash
-# Implementação
+# Implementation
 /lib
   /domain
     /usecases
       /remote_auth.dart
 
-# Teste
+# Test
 /test
   /domain
     /usecases
       /remote_auth_test.dart
 ```
 
-## **5. Padronização e boas práticas**
+## **5. Standards and best practices**
 
-Projeto configurado com o package [Flutter Lints](https://pub.dev/packages/flutter_lints).
+Project configured with [Flutter Lints](https://pub.dev/packages/flutter_lints) package.
 
-As regras foram centralizadas no pacote `shared`, no arquivo `lib/linter_rules.yaml`.  
-Cada package (microApp) deve possuir um arquivo `analysis_options.yaml` com uma estrutura básica referenciando o package core (e podendo conter regras específicas):
+The rules were centralized in the `shared` package, in the `lib/linter_rules.yaml` file.
+Each package (microApp) must have an `analysis_options.yaml` file with a basic structure referencing the package core (and may contain specific rules):
 
 ```yaml
 include: package:shared/linter_rules.yaml
-
-# Regras específicas do módulo abaixo do include...
 ```
 
 ### 5.1 Commits
 
-Deve ser mantida uma padronização quanto às mensagens de commits. Deve-se seguir o padrão especificado em [Conventional Commits.](https://www.conventionalcommits.org/pt-br/v1.0.0/)
+Standardization of commit messages must be maintained. You must follow the pattern specified in [Conventional Commits.](https://www.conventionalcommits.org/pt-br/v1.0.0/)
 
-É obrigatório sempre ter um tipo na mensagem de commit.  
-*Essa validação é feita automaticamente pelo Lefthook no momento do commit.*
+It is mandatory to always have a type in the commit message.
+*This validation is done automatically by Lefthook at commit time.*
 
-```
-<tipo>[escopo opcional]: <descrição>
+Accepted prefixes: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
 
-[corpo opcional]
+## **6. Design system**
 
-[rodapé(s) opcional(is)]
-```
-
-Prefixos aceitos: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+Project uses Atomic Design for create the Design System. Click [here](https://bradfrost.com/blog/post/atomic-web-design/) to read about Atomic Design.

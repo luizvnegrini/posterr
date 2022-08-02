@@ -12,14 +12,7 @@ class HomePage extends HookConsumerWidget {
       appBar: AppBar(
         title: Text(F.title),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () => FirebaseCrashlytics.instance.crash(),
-              child: const Text('data'))
-        ],
-      ),
+      body: const Text('Initial page'),
     );
   }
 }

@@ -1,4 +1,4 @@
-name: transport_app
+name: posterr
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.0.1+1
@@ -15,17 +15,11 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # MICROFRONTENDS
-  auth:
-    path: ../auth
-
   dependencies:
     path: ../dependencies
 
   design_system:
     path: ../design_system
-
-  onboarding:
-    path: ../onboarding
 
   shared:
     path: ../shared
@@ -51,34 +45,22 @@ flavorizr:
   flavors:
     dev:
       app:
-        name: "Transport_app dev"
+        name: "Posterr dev"
       android:
-        applicationId: "com.transportapp.dev"
-        firebase:
-          config: ".firebase/dev/google-services.json"
+        applicationId: "com.posterr.dev"
       ios:
-        bundleId: "com.transportapp.dev"
-        firebase:
-          config: ".firebase/dev/GoogleService-Info.plist"
+        bundleId: "com.posterr.dev"
     hml:
       app:
-        name: "Transport_app hml"
+        name: "Posterr hml"
       android:
-        applicationId: "com.transportapp.hml"
-        firebase:
-          config: ".firebase/hml/google-services.json"
+        applicationId: "com.posterr.hml"
       ios:
-        bundleId: "com.transportapp.hml"
-        firebase:
-          config: ".firebase/hml/GoogleService-Info.plist"
+        bundleId: "com.posterr.hml"
     prod:
       app:
-        name: "Transport_app prod"
+        name: "Posterr prod"
       android:
-        applicationId: "com.transportapp.prod"
-        firebase:
-          config: ".firebase/prod/google-services.json"
+        applicationId: "com.posterr.prod"
       ios:
-        bundleId: "com.transportapp.prod"
-        firebase:
-          config: ".firebase/prod/GoogleService-Info.plist"
+        bundleId: "com.posterr.prod"

@@ -14,11 +14,11 @@ class F {
   static String get title {
     switch (appFlavor) {
       case Flavor.dev:
-        return 'Transport_app dev';
+        return 'posterr dev';
       case Flavor.hml:
-        return 'Transport_app hml';
+        return 'posterr hml';
       case Flavor.prod:
-        return 'Transport_app prod';
+        return 'posterr prod';
       default:
         throw UnimplementedError('Flavor not encountered');
     }

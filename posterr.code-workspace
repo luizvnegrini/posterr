@@ -1,5 +1,5 @@
 {
-	"folders": [		
+	"folders": [
 		{
 			"name": "main",
 			"path": "main"
@@ -11,10 +11,6 @@
 		{
 			"name": "design_system",
 			"path": "design_system"
-		},
-		{
-			"name": "auth",
-			"path": "auth"
 		},
 		{
 			"name": "dependencies",
@@ -35,7 +31,10 @@
 				"cwd": "${workspaceFolder:main}",
 				"program": "lib/main_dev.dart",
 				"showMemoryUsage": true,
-				"args": ["--flavor", "dev"]
+				"args": [
+					"--flavor",
+					"dev"
+				]
 			},
 			{
 				"name": "hml",
@@ -44,7 +43,10 @@
 				"cwd": "${workspaceFolder:main}",
 				"program": "lib/main_hml.dart",
 				"showMemoryUsage": true,
-				"args": ["--flavor", "hml"]
+				"args": [
+					"--flavor",
+					"hml"
+				]
 			},
 			{
 				"name": "prod",
@@ -53,7 +55,10 @@
 				"cwd": "${workspaceFolder:main}",
 				"program": "lib/main_prod.dart",
 				"showMemoryUsage": true,
-				"args": ["--flavor", "prod"]
+				"args": [
+					"--flavor",
+					"prod"
+				]
 			}
 		]
 	},

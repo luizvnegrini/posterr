@@ -1,4 +1,4 @@
-package com.example.transport_app
+package com.example.posterr
 
 import io.flutter.embedding.android.FlutterActivity
 
