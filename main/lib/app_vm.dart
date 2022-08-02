@@ -32,10 +32,10 @@ class AppVM extends IAppVM {
       ///call routine to save first users and posts
     ]);
 
-    final appState = AppState(
-      sharedDependencies: SharedDependencies.load(),
+    value = AsyncValue.data(
+      AppState(
+        sharedDependencies: SharedDependencies.load(),
+      ),
     );
-
-    value = AsyncValue.data(appState);
   }
 }
