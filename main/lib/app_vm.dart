@@ -2,6 +2,9 @@
 
 import 'package:dependencies/dependencies.dart';
 import 'package:flutter/material.dart';
+import 'package:shared/shared.dart';
+
+import 'app_state.dart';
 
 abstract class IAppVM extends ValueNotifier<AsyncValue<IAppState>> {
   IAppVM(AsyncValue<IAppState> value) : super(value);
@@ -11,7 +14,6 @@ abstract class IAppVM extends ValueNotifier<AsyncValue<IAppState>> {
 
 class AppVM extends IAppVM {
   AppVM() : super(const AsyncValue.loading());
-
   var _hasRequestedLoading = false;
 
   @override
@@ -21,27 +23,22 @@ class AppVM extends IAppVM {
     }
     _hasRequestedLoading = true;
 
-    //gateways
-
-    //repositories
-
-    //services
+    //dependencies
+    final sharedDependencies = SharedDependencies.load();
 
     final splashMinDuration =
-        Future<dynamic>.delayed(const Duration(milliseconds: 500));
+        Future<dynamic>.delayed(const Duration(seconds: 1));
 
     await Future.wait<dynamic>([
       splashMinDuration,
+
+      ///call routine to save first users and posts
     ]);
 
-    final appState = AppState();
+    final appState = AppState(
+      sharedDependencies: sharedDependencies,
+    );
 
     value = AsyncValue.data(appState);
   }
-}
-
-abstract class IAppState {}
-
-class AppState extends IAppState {
-  AppState();
 }

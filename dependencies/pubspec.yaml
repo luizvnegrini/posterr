@@ -9,7 +9,8 @@ dependencies:
 
   hooks_riverpod: ^2.0.0-dev.9
   equatable: ^2.0.3
-  dartz: ^0.10.1  
+  dartz: ^0.10.1
+  localstorage: ^4.0.0+1
 
 dev_dependencies:
   flutter_lints: ^2.0.1

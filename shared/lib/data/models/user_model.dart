@@ -20,14 +20,11 @@ class UserModel {
         username: username,
       );
 
-  factory UserModel.fromEntity({
-    required User entity,
-  }) =>
-      UserModel(
+  factory UserModel.fromEntity(User entity) => UserModel(
         id: entity.id,
         joinedDate: entity.joinedDate,
         posts: entity.posts
-            .map<PostModel>((x) => PostModel.fromEntity(entity: x))
+            .map<PostModel>((x) => PostModel.fromEntity(x))
             .toList(),
         username: entity.username,
       );

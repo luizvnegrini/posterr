@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared/shared.dart';
 
+import 'app_state.dart';
 import 'app_vm.dart';
 import 'core/core.dart';
 import 'flavors/flavors.dart';
@@ -18,7 +19,7 @@ class Startup {
     final vm = AppVM();
     vm.loadDependencies();
 
-    runApp(_App(vm: vm));    
+    runApp(_App(vm: vm));
   }
 }
 

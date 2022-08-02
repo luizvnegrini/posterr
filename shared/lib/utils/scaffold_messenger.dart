@@ -25,7 +25,11 @@ void showWarnSnackBar(WidgetRef ref, String message) {
 
 String _descriptionForException(BaseException exception) {
   switch (exception.type) {
-    case ExceptionType.failedToOpenUrl:
-      return 'Algo deu errado ao tentar abrir o link!';
+    case ExceptionType.serverError:
+      return 'Try again later';
+    case ExceptionType.notFound:
+      return 'Not found';
+    default:
+      throw UnimplementedError();
   }
 }
