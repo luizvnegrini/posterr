@@ -4,6 +4,10 @@ A new social media like Twitter.
 
 ## SETUP
 
+### 0 Install Flutter Framework
+
+[See docs here.](https://docs.flutter.dev/get-started/install)
+
 
 ### 1 Lefthook
 
