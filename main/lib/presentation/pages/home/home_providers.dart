@@ -4,7 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import '../../presentation.dart';
 
 //vm's
-IHomeVM readHomeVM(WidgetRef ref) => ref.read(homeVM.notifier);
+IHomeViewModel readHomeVM(WidgetRef ref) => ref.read(homeViewModel.notifier);
 
 //states
-IHomeState useHomeState(WidgetRef ref) => ref.watch(homeVM);
+IHomeState useHomeState(WidgetRef ref) => ref.watch(homeViewModel);

@@ -1,30 +1,17 @@
-import 'package:dependencies/dependencies.dart';
+import 'package:shared/shared.dart';
 
-abstract class IHomeState extends Equatable {
-  // final double batteryPercentage;
-
-  // const IHomeState({
-  // required this.batteryPercentage,
-  // });
-
-  // IHomeState copyWith({
-  //   double? batteryPercentage,
-  // });
-}
+abstract class IHomeState extends ViewModelState {}
 
 class HomeState extends IHomeState {
-  // const HomeState({
-  //   required super.batteryPercentage,
-  // });
+  HomeState();
+  factory HomeState.initial() => HomeState();
 
   @override
-  List<Object?> get props => [
-        // batteryPercentage,
-      ];
+  List<Object?> get props => [];
 
   // @override
   // IHomeState copyWith({
-  //   double? batteryPercentage,
+
   // }) =>
   //     HomeState();
 }

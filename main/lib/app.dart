@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared/shared.dart';
 
 import 'app_state.dart';
-import 'app_vm.dart';
+import 'app_viewmodel.dart';
 import 'core/core.dart';
 import 'flavors/flavors.dart';
 
@@ -16,7 +16,7 @@ class Startup {
     WidgetsFlutterBinding.ensureInitialized();
     await Future.wait(Core.initialize());
 
-    final vm = AppVM();
+    final vm = AppViewModel();
     vm.loadDependencies();
 
     runApp(_App(vm: vm));
@@ -24,7 +24,7 @@ class Startup {
 }
 
 class _App extends StatelessWidget {
-  final AppVM vm;
+  final AppViewModel vm;
   String get appTitle => 'Transport app';
 
   const _App({

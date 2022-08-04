@@ -8,14 +8,14 @@ import 'package:shared/shared.dart';
 import 'app_state.dart';
 import 'domain/domain.dart';
 
-abstract class IAppVM extends ValueNotifier<AsyncValue<IAppState>> {
-  IAppVM(AsyncValue<IAppState> value) : super(value);
+abstract class IAppViewModel extends ValueNotifier<AsyncValue<IAppState>> {
+  IAppViewModel(AsyncValue<IAppState> value) : super(value);
 
   Future<void> loadDependencies();
 }
 
-class AppVM extends IAppVM {
-  AppVM() : super(const AsyncValue.loading());
+class AppViewModel extends IAppViewModel {
+  AppViewModel() : super(const AsyncValue.loading());
   var _hasRequestedLoading = false;
 
   @override
