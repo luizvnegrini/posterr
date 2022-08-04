@@ -12,5 +12,5 @@ class CreateUsers implements ICreateUsers {
 
   @override
   Future<Either<UserFailure, Unit>> call(List<User> users) async =>
-      _repository.createUsers(users);
+      _repository.saveUsers(users);
 }

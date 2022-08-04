@@ -8,7 +8,9 @@ final homeViewModel =
     StateNotifierProvider.autoDispose<IHomeViewModel, IHomeState>(
   (ref) => HomeViewModel(
     fetchPostSettings: ref.read(fetchPostSettings),
-    fetchUsers: ref.read(fetchUsers),
+    fetchPosts: ref.read(fetchUsers),
+    createPost: ref.read(createPost),
+    userId: ref.read(userId),
   ),
 );
 
@@ -16,22 +18,30 @@ abstract class IHomeViewModel extends ViewModel<IHomeState> {
   IHomeViewModel(HomeState state) : super(state);
 
   abstract final IFetchPostSettings fetchPostSettings;
-  abstract final IFetchUsers fetchUsers;
+  abstract final IFetchPosts fetchPosts;
+  abstract final ICreatePost createPost;
+  abstract final int userId;
   Future<void> loadUserFeed();
   Future<void> loadPostSettings();
+  Future<void> createNewPost(String text);
+  void checkIsPostFormValid(String text);
 }
 
 class HomeViewModel extends IHomeViewModel {
   @override
   final IFetchPostSettings fetchPostSettings;
   @override
-  final IFetchUsers fetchUsers;
-
-  final int userId = 5;
+  final IFetchPosts fetchPosts;
+  @override
+  final ICreatePost createPost;
+  @override
+  final int userId;
 
   HomeViewModel({
     required this.fetchPostSettings,
-    required this.fetchUsers,
+    required this.fetchPosts,
+    required this.createPost,
+    required this.userId,
   }) : super(HomeState.initial());
 
   @override
@@ -46,22 +56,16 @@ class HomeViewModel extends IHomeViewModel {
     state = state.copyWith(isLoading: false);
   }
 
-  Future<List<User>> _getUsers() async {
-    final response = await fetchUsers();
-
-    return response.fold<List<User>>(
-      (l) => throw UnimplementedError(),
-      (users) => users,
-    );
-  }
-
   @override
   Future<void> loadUserFeed() async {
-    final users = await _getUsers();
+    final response = await fetchPosts();
 
-    state = state.copyWith(
-      feed: users.firstWhere((user) => user.id == userId).posts,
+    final newState = response.fold<IHomeState>(
+      (l) => throw UnimplementedError(),
+      (posts) => state = state.copyWith(feed: posts),
     );
+
+    state = newState.copyWith(isLoading: false);
   }
 
   @override
@@ -73,6 +77,27 @@ class HomeViewModel extends IHomeViewModel {
       (postSettings) => state = state.copyWith(
         postSettings: postSettings,
       ),
+    );
+  }
+
+  @override
+  void checkIsPostFormValid(String text) => state = state.copyWith(
+      isPostFormValid: text.length >= state.postSettings!.minLength &&
+          text.length <= state.postSettings!.maxLength);
+
+  @override
+  Future<void> createNewPost(String text) async {
+    final createPostResponse = await createPost(
+      Post.original(
+        userId: userId,
+        creationDate: DateTime.now(),
+        text: text,
+      ),
+    );
+
+    await createPostResponse.fold(
+      (l) => throw UnimplementedError(),
+      (r) async => await loadUserFeed(),
     );
   }
 }

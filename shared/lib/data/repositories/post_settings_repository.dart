@@ -16,9 +16,7 @@ class PostSettingsRepository implements IPostSettingsRepository {
     try {
       await _localStorageDataSource.save(
         key: key,
-        value: jsonEncode(
-          PostSettingsModel.fromEntity(settings),
-        ),
+        value: jsonEncode(PostSettingsModel.fromEntity(settings)),
       );
 
       return const Right(unit);

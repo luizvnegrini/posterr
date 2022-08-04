@@ -1,7 +1,6 @@
 import '../../shared.dart';
 
 class Post {
-  final int id;
   final int userId;
   final String? text;
   final User? author;
@@ -10,7 +9,6 @@ class Post {
   final DateTime creationDate;
 
   Post.original({
-    required this.id,
     required this.text,
     required this.userId,
     required this.creationDate,
@@ -19,7 +17,6 @@ class Post {
         type = PostType.post;
 
   Post.repost({
-    required this.id,
     required this.relatedPost,
     required this.userId,
     required this.creationDate,
@@ -28,7 +25,6 @@ class Post {
         author = null;
 
   Post.quote({
-    required this.id,
     required this.text,
     required this.relatedPost,
     required this.author,

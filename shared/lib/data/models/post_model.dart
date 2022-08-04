@@ -1,7 +1,6 @@
 import '../../shared.dart';
 
 class PostModel {
-  final int id;
   final int userId;
   final String? text;
   final UserModel? author;
@@ -10,7 +9,6 @@ class PostModel {
   final DateTime creationDate;
 
   PostModel.original({
-    required this.id,
     required this.userId,
     required this.text,
     required this.creationDate,
@@ -19,7 +17,6 @@ class PostModel {
         type = PostTypeModel.post;
 
   PostModel.repost({
-    required this.id,
     required this.relatedPost,
     required this.userId,
     required this.creationDate,
@@ -28,7 +25,6 @@ class PostModel {
         author = null;
 
   PostModel.quote({
-    required this.id,
     required this.text,
     required this.relatedPost,
     required this.author,
@@ -40,14 +36,12 @@ class PostModel {
     switch (type) {
       case PostTypeModel.post:
         return Post.original(
-          id: id,
           userId: userId,
           text: text,
           creationDate: creationDate,
         );
       case PostTypeModel.quote:
         return Post.quote(
-          id: id,
           userId: userId,
           text: text,
           relatedPost: relatedPost?.toEntity(),
@@ -55,12 +49,9 @@ class PostModel {
           creationDate: creationDate,
         );
       case PostTypeModel.repost:
-        return Post.quote(
-          id: id,
+        return Post.repost(
           userId: userId,
-          text: text,
           relatedPost: relatedPost?.toEntity(),
-          author: author?.toEntity(),
           creationDate: creationDate,
         );
       default:
@@ -74,14 +65,12 @@ class PostModel {
     switch (entity.type) {
       case PostType.post:
         return PostModel.original(
-          id: entity.id,
           userId: entity.userId,
           text: entity.text,
           creationDate: entity.creationDate,
         );
       case PostType.quote:
         return PostModel.quote(
-          id: entity.id,
           userId: entity.userId,
           text: entity.text,
           relatedPost: PostModel.fromEntity(entity.relatedPost!),
@@ -90,7 +79,6 @@ class PostModel {
         );
       case PostType.repost:
         return PostModel.repost(
-          id: entity.id,
           userId: entity.userId,
           relatedPost: PostModel.fromEntity(entity.relatedPost!),
           creationDate: entity.creationDate,
@@ -101,7 +89,6 @@ class PostModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'author': author?.toJson(),
         'userId': userId,
         'text': text,
@@ -116,23 +103,19 @@ class PostModel {
     switch (type) {
       case PostTypeModel.post:
         return PostModel.original(
-          id: json['id'],
           userId: json['userId'],
           text: json['text'],
           creationDate: DateTime.parse(json['creationDate']),
         );
       case PostTypeModel.quote:
         return PostModel.quote(
-            id: json['id'],
             userId: json['userId'],
             text: json['text'],
             relatedPost: PostModel.fromJson(json['relatedPost']),
             creationDate: DateTime.parse(json['creationDate']),
             author: UserModel.fromJson(json['author']));
-
       case PostTypeModel.repost:
         return PostModel.repost(
-          id: json['id'],
           userId: json['userId'],
           creationDate: DateTime.parse(json['creationDate']),
           relatedPost: PostModel.fromJson(json['relatedPost']),

@@ -9,9 +9,13 @@ abstract class ISharedDependencies {
   abstract final IPostSettingsRepository postSettingsRepository;
 
   //usecases
+  abstract final ICreatePost createPost;
 
   //datasources
   abstract final ILocalStorageDataSource localStorageDataSource;
+
+  //data
+  abstract final int userId;
 }
 
 class SharedDependencies implements ISharedDependencies {
@@ -22,15 +26,23 @@ class SharedDependencies implements ISharedDependencies {
   final IPostSettingsRepository postSettingsRepository;
 
   //usecases
+  @override
+  final ICreatePost createPost;
 
   //datasources
   @override
   final ILocalStorageDataSource localStorageDataSource;
 
+  //data
+  @override
+  final int userId;
+
   SharedDependencies({
     required this.localStorageDataSource,
     required this.userRepository,
     required this.postSettingsRepository,
+    required this.userId,
+    required this.createPost,
   });
 
   static Future<SharedDependencies> load() async {
@@ -38,11 +50,14 @@ class SharedDependencies implements ISharedDependencies {
     await storage.ready;
 
     final cacheStorageAdapter = LocalStorageAdapter(localStorage: storage);
+    final userRepository = UserRepository(cacheStorageAdapter);
 
     return SharedDependencies(
       localStorageDataSource: cacheStorageAdapter,
-      userRepository: UserRepository(cacheStorageAdapter),
+      userRepository: userRepository,
       postSettingsRepository: PostSettingsRepository(cacheStorageAdapter),
+      userId: 5,
+      createPost: CreatePost(userRepository),
     );
   }
 }

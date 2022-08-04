@@ -10,41 +10,58 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = readHomeVM(ref);
+    final controller = useTextEditingController();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
-      body: RefreshIndicator(
-        onRefresh: viewModel.loadUserFeed,
-        child: HookConsumer(
-          builder: (context, ref, child) {
-            final state = useHomeState(ref);
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: viewModel.loadUserFeed,
+          child: HookConsumer(
+            builder: (context, ref, child) {
+              final state = useHomeState(ref);
 
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      final post = state.feedItems![index];
-
-                      return Text(post.creationDate.toIso8601String());
-                    },
-                    separatorBuilder: ((context, index) => Container()),
-                    itemCount: state.feedItems!.length,
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: controller,
+                    decoration: const InputDecoration.collapsed(
+                      hintText: 'What\'s happening?',
+                    ),
+                    maxLength: state.postSettings!.maxLength,
+                    minLines: 1,
+                    maxLines: 3,
+                    onChanged: viewModel.checkIsPostFormValid,
+                    keyboardType: TextInputType.text,
+                    enabled: !state.isLoading,
+                    onSubmitted: (text) => _submit(
+                      viewModel,
+                      state,
+                      text,
+                    ),
                   ),
-                ),
-                TextField(
-                  maxLength: state.postSettings!.maxLength,
-                )
-              ],
-            );
-          },
+                  Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        final post = state.feedItems![index];
+
+                        return Text(post.creationDate.toIso8601String());
+                      },
+                      separatorBuilder: ((context, index) => Container()),
+                      itemCount: state.feedItems!.length,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(items: const [
@@ -58,5 +75,15 @@ class HomePage extends HookConsumerWidget {
         ),
       ]),
     );
+  }
+
+  void _submit(
+    IHomeViewModel viewModel,
+    IHomeState state,
+    String text,
+  ) {
+    if (state.isPostFormValid) {
+      viewModel.createNewPost(text);
+    }
   }
 }

@@ -10,7 +10,7 @@ class UserRepository implements IUserRepository {
   UserRepository(this._localStorageDataSource);
 
   @override
-  Future<Either<UserFailure, Unit>> createUsers(List<User> users) async {
+  Future<Either<UserFailure, Unit>> saveUsers(List<User> users) async {
     try {
       await _localStorageDataSource.save(
         key: 'users',

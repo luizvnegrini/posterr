@@ -33,11 +33,12 @@ class AppViewModel extends IAppViewModel {
       splashMinDuration,
       SeedInitialData(
         createUser: CreateUsers(sharedDependencies.userRepository),
-        fetchUsers: FetchUsers(sharedDependencies.userRepository),
+        fetchUsers: FetchPosts(sharedDependencies.userRepository),
         createPostSettings:
             CreatePostSettings(sharedDependencies.postSettingsRepository),
         fetchPostSettings:
             FetchPostSettings(sharedDependencies.postSettingsRepository),
+        userId: sharedDependencies.userId,
       ).execute(),
     ]);
 
@@ -52,19 +53,22 @@ class AppViewModel extends IAppViewModel {
 
 class SeedInitialData {
   final ICreateUsers _createUsers;
-  final IFetchUsers _fetchUsers;
+  final IFetchPosts _fetchUsers;
   final IFetchPostSettings _fetchPostSettings;
   final ICreatePostSettings _createPostSettings;
+  final int _userId;
 
   SeedInitialData({
     required ICreateUsers createUser,
-    required IFetchUsers fetchUsers,
+    required IFetchPosts fetchUsers,
     required IFetchPostSettings fetchPostSettings,
     required ICreatePostSettings createPostSettings,
+    required int userId,
   })  : _createUsers = createUser,
         _fetchUsers = fetchUsers,
         _fetchPostSettings = fetchPostSettings,
-        _createPostSettings = createPostSettings;
+        _createPostSettings = createPostSettings,
+        _userId = userId;
 
   Future<void> execute() async {
     final usersResponse = await _fetchUsers();
@@ -77,39 +81,34 @@ class SeedInitialData {
       final now = DateTime.now();
 
       for (var i = 1; i < 6; i++) {
-        if (i == 5) {
+        if (i == _userId) {
           final uPosts = <Post>[
             Post.original(
               userId: i,
               text: 'Hello! This is my 1 post!!',
-              id: i + 1,
-              creationDate: now,
+              creationDate: now.add(const Duration(days: -1)),
             ),
             Post.quote(
               userId: i,
-              id: i + 2,
               text: 'This is quote post',
-              relatedPost: posts.firstWhere((post) => post.id == 1),
+              relatedPost: posts[0],
               author: users.firstWhere((user) => user.id == 1),
-              creationDate: now,
+              creationDate: now.add(const Duration(days: -2)),
             ),
             Post.repost(
               userId: i,
-              id: i + 3,
-              relatedPost: posts.firstWhere((post) => post.id == 2),
-              creationDate: now,
+              relatedPost: posts[1],
+              creationDate: now.add(const Duration(days: -3)),
             ),
             Post.repost(
               userId: i,
-              id: i + 4,
-              relatedPost: posts.firstWhere((post) => post.id == 3),
-              creationDate: now,
+              relatedPost: posts[2],
+              creationDate: now.add(const Duration(days: -4)),
             ),
             Post.repost(
               userId: i,
-              id: i + 5,
-              relatedPost: posts.firstWhere((post) => post.id == 4),
-              creationDate: now,
+              relatedPost: posts[3],
+              creationDate: now.add(const Duration(days: -5)),
             ),
           ];
           final user = User(
@@ -125,7 +124,6 @@ class SeedInitialData {
           final post = Post.original(
             userId: i,
             text: 'Hello! This is my $i post!!',
-            id: i,
             creationDate: now,
           );
           final user = User(
@@ -140,14 +138,19 @@ class SeedInitialData {
         }
       }
 
-      _createUsers.call(users);
+      await _createUsers(users);
     });
 
     final postSettingsResponse = await _fetchPostSettings();
     await postSettingsResponse
         .fold((l) => throw Exception('unable to initialize'), (config) async {
       if (config == null) {
-        await _createPostSettings(PostSettings(maxLength: 777));
+        await _createPostSettings(
+          PostSettings(
+            maxLength: 777,
+            minLength: 5,
+          ),
+        );
       }
     });
   }
