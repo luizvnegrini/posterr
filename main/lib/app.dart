@@ -10,6 +10,7 @@ import 'app_state.dart';
 import 'app_viewmodel.dart';
 import 'core/core.dart';
 import 'flavors/flavors.dart';
+import 'presentation/presentation.dart';
 
 class Startup {
   static Future<void> run() async {
@@ -25,7 +26,7 @@ class Startup {
 
 class _App extends StatelessWidget {
   final AppViewModel vm;
-  String get appTitle => 'Transport app';
+  String get appTitle => 'Posterr';
 
   const _App({
     required this.vm,
@@ -37,9 +38,11 @@ class _App extends StatelessWidget {
       ValueListenableBuilder<AsyncValue<IAppState>>(
         valueListenable: vm,
         builder: (context, value, child) => value.maybeWhen(
-          data: (state) => const ProviderScope(
-            overrides: [],
-            child: AppLoadedRoot(),
+          data: (state) => ProviderScope(
+            overrides: [
+              ...mainProviders(state),
+            ],
+            child: const AppLoadedRoot(),
           ),
           orElse: () => MaterialApp(
             title: appTitle,

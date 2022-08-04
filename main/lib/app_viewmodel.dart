@@ -103,7 +103,7 @@ class SeedInitialData {
           ];
           final user = User(
             id: i,
-            username: 'User generated $i',
+            username: 'Luiz Negrini',
             joinedDate: DateTime(2021, 3, 25),
             posts: uPosts,
           );
@@ -119,7 +119,7 @@ class SeedInitialData {
           );
           final user = User(
             id: i,
-            username: 'User generated $i',
+            username: 'User gen. $i',
             joinedDate: DateTime.now(),
             posts: <Post>[post],
           );
