@@ -5,14 +5,14 @@ import 'package:dependencies/dependencies.dart';
 import '../../shared.dart';
 
 class UserRepository implements IUserRepository {
-  final ILocalStorageDataSource _cacheStorage;
+  final ILocalStorageDataSource _localStorageDataSource;
 
-  UserRepository(this._cacheStorage);
+  UserRepository(this._localStorageDataSource);
 
   @override
   Future<Either<UserFailure, Unit>> createUsers(List<User> users) async {
     try {
-      await _cacheStorage.save(
+      await _localStorageDataSource.save(
         key: 'users',
         value: jsonEncode(
             users.map((user) => UserModel.fromEntity(user)).toList()),
@@ -27,7 +27,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<Either<UserFailure, List<User>>> fetchUsers() async {
     try {
-      final usersJson = await _cacheStorage.fetch('users');
+      final usersJson = await _localStorageDataSource.fetch('users');
 
       if (usersJson == null) return const Right(<User>[]);
       final usersMap = jsonDecode(usersJson) as List;

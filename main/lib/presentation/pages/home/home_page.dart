@@ -17,24 +17,34 @@ class HomePage extends HookConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: viewModel.loadUserFeed,
-        child: Column(
-          children: [
-            HookConsumer(
-              builder: (context, ref, child) {
-                final state = useHomeState(ref);
+        child: HookConsumer(
+          builder: (context, ref, child) {
+            final state = useHomeState(ref);
 
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                return ListView.separated(
-                  itemBuilder: (context, index) => Container(),
-                  separatorBuilder: ((context, index) => Container()),
-                  itemCount: state.feed!.length,
-                );
-              },
-            ),
-          ],
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      final post = state.feedItems![index];
+
+                      return Text(post.creationDate.toIso8601String());
+                    },
+                    separatorBuilder: ((context, index) => Container()),
+                    itemCount: state.feedItems!.length,
+                  ),
+                ),
+                TextField(
+                  maxLength: state.postSettings!.maxLength,
+                )
+              ],
+            );
+          },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(items: const [

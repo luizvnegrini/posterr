@@ -1,10 +1,12 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:shared/data/repositories/post_settings_repository.dart';
 
 import '../../shared.dart';
 
 abstract class ISharedDependencies {
   //repositories
   abstract final IUserRepository userRepository;
+  abstract final IPostSettingsRepository postSettingsRepository;
 
   //usecases
 
@@ -16,6 +18,8 @@ class SharedDependencies implements ISharedDependencies {
   //repositories
   @override
   final IUserRepository userRepository;
+  @override
+  final IPostSettingsRepository postSettingsRepository;
 
   //usecases
 
@@ -26,6 +30,7 @@ class SharedDependencies implements ISharedDependencies {
   SharedDependencies({
     required this.localStorageDataSource,
     required this.userRepository,
+    required this.postSettingsRepository,
   });
 
   static Future<SharedDependencies> load() async {
@@ -33,11 +38,11 @@ class SharedDependencies implements ISharedDependencies {
     await storage.ready;
 
     final cacheStorageAdapter = LocalStorageAdapter(localStorage: storage);
-    final userRepository = UserRepository(cacheStorageAdapter);
 
     return SharedDependencies(
       localStorageDataSource: cacheStorageAdapter,
-      userRepository: userRepository,
+      userRepository: UserRepository(cacheStorageAdapter),
+      postSettingsRepository: PostSettingsRepository(cacheStorageAdapter),
     );
   }
 }

@@ -6,31 +6,44 @@ import '../../presentation.dart';
 
 final homeViewModel =
     StateNotifierProvider.autoDispose<IHomeViewModel, IHomeState>(
-  (ref) => HomeViewModel(fetchUsers: ref.read(fetchUsers)),
+  (ref) => HomeViewModel(
+    fetchPostSettings: ref.read(fetchPostSettings),
+    fetchUsers: ref.read(fetchUsers),
+  ),
 );
 
 abstract class IHomeViewModel extends ViewModel<IHomeState> {
   IHomeViewModel(HomeState state) : super(state);
 
+  abstract final IFetchPostSettings fetchPostSettings;
   abstract final IFetchUsers fetchUsers;
   Future<void> loadUserFeed();
+  Future<void> loadPostSettings();
 }
 
 class HomeViewModel extends IHomeViewModel {
+  @override
+  final IFetchPostSettings fetchPostSettings;
   @override
   final IFetchUsers fetchUsers;
 
   final int userId = 5;
 
   HomeViewModel({
+    required this.fetchPostSettings,
     required this.fetchUsers,
   }) : super(HomeState.initial());
 
   @override
-  void initViewModel() {
+  Future<void> initViewModel() async {
     super.initViewModel();
 
-    loadUserFeed();
+    state = state.copyWith(isLoading: true);
+    await Future.wait([
+      loadUserFeed(),
+      loadPostSettings(),
+    ]);
+    state = state.copyWith(isLoading: false);
   }
 
   Future<List<User>> _getUsers() async {
@@ -44,13 +57,22 @@ class HomeViewModel extends IHomeViewModel {
 
   @override
   Future<void> loadUserFeed() async {
-    state = state.copyWith(isLoading: true);
-
     final users = await _getUsers();
 
     state = state.copyWith(
       feed: users.firstWhere((user) => user.id == userId).posts,
-      isLoading: false,
+    );
+  }
+
+  @override
+  Future<void> loadPostSettings() async {
+    final postSettingsResponse = await fetchPostSettings();
+
+    postSettingsResponse.fold(
+      (l) => throw UnimplementedError(),
+      (postSettings) => state = state.copyWith(
+        postSettings: postSettings,
+      ),
     );
   }
 }

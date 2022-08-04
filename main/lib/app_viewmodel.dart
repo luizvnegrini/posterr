@@ -34,6 +34,10 @@ class AppViewModel extends IAppViewModel {
       SeedInitialData(
         createUser: CreateUsers(sharedDependencies.userRepository),
         fetchUsers: FetchUsers(sharedDependencies.userRepository),
+        createPostSettings:
+            CreatePostSettings(sharedDependencies.postSettingsRepository),
+        fetchPostSettings:
+            FetchPostSettings(sharedDependencies.postSettingsRepository),
       ).execute(),
     ]);
 
@@ -49,16 +53,23 @@ class AppViewModel extends IAppViewModel {
 class SeedInitialData {
   final ICreateUsers _createUsers;
   final IFetchUsers _fetchUsers;
+  final IFetchPostSettings _fetchPostSettings;
+  final ICreatePostSettings _createPostSettings;
 
   SeedInitialData({
     required ICreateUsers createUser,
     required IFetchUsers fetchUsers,
+    required IFetchPostSettings fetchPostSettings,
+    required ICreatePostSettings createPostSettings,
   })  : _createUsers = createUser,
-        _fetchUsers = fetchUsers;
+        _fetchUsers = fetchUsers,
+        _fetchPostSettings = fetchPostSettings,
+        _createPostSettings = createPostSettings;
 
   Future<void> execute() async {
-    final response = await _fetchUsers();
-    response.fold((l) => throw Exception('unable to initialize'), (seedUsers) {
+    final usersResponse = await _fetchUsers();
+    await usersResponse.fold((l) => throw Exception('unable to initialize'),
+        (seedUsers) async {
       if (seedUsers.isNotEmpty) return;
 
       final users = <User>[];
@@ -130,6 +141,14 @@ class SeedInitialData {
       }
 
       _createUsers.call(users);
+    });
+
+    final postSettingsResponse = await _fetchPostSettings();
+    await postSettingsResponse
+        .fold((l) => throw Exception('unable to initialize'), (config) async {
+      if (config == null) {
+        await _createPostSettings(PostSettings(maxLength: 777));
+      }
     });
   }
 }

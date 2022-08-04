@@ -2,18 +2,21 @@ import 'package:shared/shared.dart';
 
 abstract class IHomeState extends ViewModelState {
   const IHomeState();
-  abstract final List<Post>? feed;
+  abstract final List<Post>? feedItems;
+  abstract final PostSettings? postSettings;
   abstract final bool isLoading;
 
   IHomeState copyWith({
     List<Post>? feed,
     bool? isLoading,
+    PostSettings? postSettings,
   });
 }
 
 class HomeState extends IHomeState {
   const HomeState({
-    this.feed,
+    this.feedItems,
+    this.postSettings,
     this.isLoading = false,
   });
 
@@ -21,21 +24,25 @@ class HomeState extends IHomeState {
 
   @override
   List<Object?> get props => [
-        feed,
+        feedItems,
         isLoading,
       ];
   @override
-  final List<Post>? feed;
+  final List<Post>? feedItems;
   @override
   final bool isLoading;
+  @override
+  final PostSettings? postSettings;
 
   @override
   IHomeState copyWith({
     feed,
     isLoading,
+    postSettings,
   }) =>
       HomeState(
-        feed: feed ?? this.feed,
+        feedItems: feed ?? feedItems,
         isLoading: isLoading ?? this.isLoading,
+        postSettings: postSettings ?? this.postSettings,
       );
 }
