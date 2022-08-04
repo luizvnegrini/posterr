@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../shared.dart';
 
 class UserModel {
@@ -27,5 +29,21 @@ class UserModel {
             .map<PostModel>((x) => PostModel.fromEntity(x))
             .toList(),
         username: entity.username,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'username': username,
+        'posts': posts.map((e) => jsonEncode(e.toJson())).toList(),
+        'joinedDate': joinedDate.toIso8601String(),
+      };
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        id: json['id'],
+        username: json['username'],
+        joinedDate: DateTime.parse(json['joinedDate']),
+        posts: (json['posts'] as List)
+            .map((post) => PostModel.fromJson(jsonDecode(post)))
+            .toList(),
       );
 }

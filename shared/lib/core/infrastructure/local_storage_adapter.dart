@@ -14,7 +14,7 @@ class LocalStorageAdapter implements ILocalStorageDataSource {
     required dynamic value,
   }) async {
     await localStorage.deleteItem(key);
-    await localStorage.setItem(key, value);
+    await localStorage.setItem(key, value, (object) => object);
   }
 
   @override

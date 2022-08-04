@@ -19,6 +19,34 @@ extension PostTypeModelExtension on PostTypeModel {
         throw UnimplementedError();
     }
   }
+
+  String toJson() {
+    switch (this) {
+      case PostTypeModel.post:
+        return 'post';
+      case PostTypeModel.quote:
+        return 'quote';
+      case PostTypeModel.repost:
+        return 'repost';
+      default:
+        throw UnimplementedError();
+    }
+  }
+}
+
+extension StringToPostTypeExtension on String {
+  PostTypeModel fromJsonToPostTypeModel() {
+    switch (this) {
+      case 'post':
+        return PostTypeModel.post;
+      case 'quote':
+        return PostTypeModel.quote;
+      case 'repost':
+        return PostTypeModel.repost;
+      default:
+        throw UnimplementedError();
+    }
+  }
 }
 
 extension PostTypeExtension on PostType {
