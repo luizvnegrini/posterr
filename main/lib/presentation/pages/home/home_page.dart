@@ -31,22 +31,34 @@ class HomePage extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
-                    controller: controller,
-                    decoration: const InputDecoration.collapsed(
-                      hintText: 'What\'s happening?',
-                    ),
-                    maxLength: state.postSettings!.maxLength,
-                    minLines: 1,
-                    maxLines: 3,
-                    onChanged: viewModel.checkIsPostFormValid,
-                    keyboardType: TextInputType.text,
-                    enabled: !state.isLoading,
-                    onSubmitted: (text) => _submit(
-                      viewModel,
-                      state,
-                      text,
-                    ),
-                  ),
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'What\'s happening?',
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            _submit(viewModel, state, controller.text);
+                            controller.clear();
+                          },
+                          child: const Icon(
+                            Icons.send,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                      maxLength: state.postSettings!.maxLength,
+                      minLines: 1,
+                      maxLines: 3,
+                      onChanged: viewModel.checkIsPostFormValid,
+                      keyboardType: TextInputType.text,
+                      enabled: !state.isLoading,
+                      onSubmitted: (text) {
+                        _submit(
+                          viewModel,
+                          state,
+                          text,
+                        );
+                        controller.clear();
+                      }),
                   Expanded(
                     child: ListView.separated(
                       itemBuilder: (context, index) {
