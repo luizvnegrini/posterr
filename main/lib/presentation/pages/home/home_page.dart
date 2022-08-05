@@ -5,7 +5,12 @@ import 'package:posterr/presentation/presentation.dart';
 class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  String get title => 'Feed';
+  String get _title => 'Feed';
+  String? _errorText(
+    String text,
+    IHomeState state,
+  ) =>
+      text.isEmpty || state.isPostFormValid ? null : 'Invalid post';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,7 +19,7 @@ class HomePage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(_title),
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -30,18 +35,25 @@ class HomePage extends HookConsumerWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
+                  TextFormField(
                       controller: controller,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
+                        labelText: 'Create new post',
                         hintText: 'What\'s happening?',
+                        errorText: _errorText(controller.text, state),
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            _submit(viewModel, state, controller.text);
-                            controller.clear();
+                            if (_errorText(controller.text, state) == null) {
+                              _submit(viewModel, state, controller.text);
+
+                              if (state.postCreated) {
+                                controller.clear();
+                              }
+                            }
                           },
                           child: const Icon(
                             Icons.send,
-                            color: Colors.red,
                           ),
                         ),
                       ),
@@ -51,13 +63,17 @@ class HomePage extends HookConsumerWidget {
                       onChanged: viewModel.checkIsPostFormValid,
                       keyboardType: TextInputType.text,
                       enabled: !state.isLoading,
-                      onSubmitted: (text) {
-                        _submit(
-                          viewModel,
-                          state,
-                          text,
-                        );
-                        controller.clear();
+                      onFieldSubmitted: (text) {
+                        if (_errorText(controller.text, state) == null) {
+                          _submit(
+                            viewModel,
+                            state,
+                            text,
+                          );
+                          if (state.postCreated) {
+                            controller.clear();
+                          }
+                        }
                       }),
                   Expanded(
                     child: ListView.separated(
