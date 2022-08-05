@@ -7,7 +7,7 @@ abstract class IMainDependencies {
 
   //usecases
   abstract final ICreateUsers createUsers;
-  abstract final IFetchPosts fetchUsers;
+  abstract final IFetchPosts fetchPosts;
   abstract final IFetchPostSettings fetchPostSettings;
   abstract final ICreatePost createPost;
 
@@ -24,7 +24,7 @@ class MainDependencies implements IMainDependencies {
   @override
   final ICreateUsers createUsers;
   @override
-  final IFetchPosts fetchUsers;
+  final IFetchPosts fetchPosts;
   @override
   final IFetchPostSettings fetchPostSettings;
   @override
@@ -39,7 +39,7 @@ class MainDependencies implements IMainDependencies {
   @override
   MainDependencies({
     required this.createUsers,
-    required this.fetchUsers,
+    required this.fetchPosts,
     required this.fetchPostSettings,
     required this.userId,
     required this.createPost,
@@ -48,9 +48,8 @@ class MainDependencies implements IMainDependencies {
   static MainDependencies load(SharedDependencies sharedDependencies) =>
       MainDependencies(
         createUsers: CreateUsers(sharedDependencies.userRepository),
-        fetchUsers: FetchPosts(sharedDependencies.userRepository),
-        fetchPostSettings:
-            FetchPostSettings(sharedDependencies.postSettingsRepository),
+        fetchPosts: sharedDependencies.fetchPosts,
+        fetchPostSettings: sharedDependencies.fetchPostSettings,
         userId: sharedDependencies.userId,
         createPost: sharedDependencies.createPost,
       );

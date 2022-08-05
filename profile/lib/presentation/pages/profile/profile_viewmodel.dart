@@ -1,11 +1,11 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:shared/shared.dart';
 
-import '../../presentation.dart';
+import '../../../profile.dart';
 
-final homeViewModel =
-    StateNotifierProvider.autoDispose<IHomeViewModel, IHomeState>(
-  (ref) => HomeViewModel(
+final profileViewModel =
+    StateNotifierProvider.autoDispose<IProfileViewModel, IProfileState>(
+  (ref) => ProfileViewModel(
     fetchPostSettings: ref.read(fetchPostSettings),
     fetchPosts: ref.read(fetchPosts),
     createPost: ref.read(createPost),
@@ -13,8 +13,8 @@ final homeViewModel =
   ),
 );
 
-abstract class IHomeViewModel extends ViewModel<IHomeState> {
-  IHomeViewModel(HomeState state) : super(state);
+abstract class IProfileViewModel extends ViewModel<IProfileState> {
+  IProfileViewModel(ProfileState state) : super(state);
 
   abstract final IFetchPostSettings fetchPostSettings;
   abstract final IFetchPosts fetchPosts;
@@ -26,7 +26,7 @@ abstract class IHomeViewModel extends ViewModel<IHomeState> {
   void checkIsPostFormValid(String text);
 }
 
-class HomeViewModel extends IHomeViewModel {
+class ProfileViewModel extends IProfileViewModel {
   @override
   final IFetchPostSettings fetchPostSettings;
   @override
@@ -36,17 +36,16 @@ class HomeViewModel extends IHomeViewModel {
   @override
   final int userId;
 
-  HomeViewModel({
+  ProfileViewModel({
     required this.fetchPostSettings,
     required this.fetchPosts,
     required this.createPost,
     required this.userId,
-  }) : super(HomeState.initial());
+  }) : super(ProfileState.initial());
 
   @override
   Future<void> initViewModel() async {
     super.initViewModel();
-
     state = state.copyWith(isLoading: true);
     await Future.wait([
       loadUserFeed(),
@@ -59,7 +58,7 @@ class HomeViewModel extends IHomeViewModel {
   Future<void> loadUserFeed() async {
     final response = await fetchPosts();
 
-    final newState = response.fold<IHomeState>(
+    final newState = response.fold<IProfileState>(
       (l) => throw UnimplementedError(),
       (posts) => state = state.copyWith(feed: posts),
     );

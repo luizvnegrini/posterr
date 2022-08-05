@@ -4,13 +4,13 @@ import 'package:dependencies/dependencies.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:profile/profile.dart';
 import 'package:shared/shared.dart';
 
 import 'app_state.dart';
 import 'app_viewmodel.dart';
 import 'core/core.dart';
 import 'flavors/flavors.dart';
-import 'presentation/presentation.dart';
 
 class Startup {
   static Future<void> run() async {
@@ -20,27 +20,31 @@ class Startup {
     final vm = AppViewModel();
     vm.loadDependencies();
 
-    runApp(_App(vm: vm));
+    runApp(_App(viewModel: vm));
   }
 }
 
 class _App extends StatelessWidget {
-  final AppViewModel vm;
+  final AppViewModel viewModel;
   String get appTitle => 'Posterr';
 
   const _App({
-    required this.vm,
+    required this.viewModel,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
       ValueListenableBuilder<AsyncValue<IAppState>>(
-        valueListenable: vm,
+        valueListenable: viewModel,
         builder: (context, value, child) => value.maybeWhen(
           data: (state) => ProviderScope(
             overrides: [
-              ...mainProviders(state),
+              userId.overrideWithValue(state.sharedDependencies.userId),
+              fetchPostSettings.overrideWithValue(
+                  state.sharedDependencies.fetchPostSettings),
+              fetchPosts.overrideWithValue(state.sharedDependencies.fetchPosts),
+              createPost.overrideWithValue(state.sharedDependencies.createPost),
             ],
             child: const AppLoadedRoot(),
           ),
@@ -104,6 +108,7 @@ class AppLoadedRoot extends HookConsumerWidget {
         routes: <String, Widget Function(BuildContext)>{}..addEntries(
             [
               ...mainRoutes,
+              ...profileRoutes,
             ],
           ),
         scaffoldMessengerKey: useScaffoldMessenger(ref),

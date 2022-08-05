@@ -2,7 +2,7 @@
 
 import 'package:dependencies/dependencies.dart';
 import 'package:flutter/material.dart';
-import 'package:posterr/core/config/dependencies.dart';
+import 'package:main/core/config/dependencies.dart';
 import 'package:shared/shared.dart';
 
 import 'app_state.dart';

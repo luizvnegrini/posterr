@@ -5,6 +5,10 @@
 			"path": "main"
 		},
 		{
+			"name": "profile",
+			"path": "profile"
+		},
+		{
 			"name": "shared",
 			"path": "shared"
 		},

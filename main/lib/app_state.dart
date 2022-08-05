@@ -1,4 +1,4 @@
-import 'package:posterr/core/config/dependencies.dart';
+import 'package:main/core/config/dependencies.dart';
 import 'package:shared/shared.dart';
 
 abstract class IAppState {
