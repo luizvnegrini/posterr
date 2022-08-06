@@ -5,10 +5,10 @@ import 'package:main/presentation/presentation.dart';
 import 'package:profile/profile.dart';
 
 class HomePage extends HookConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
-  final bottomNavBarPages = const [
-    FeedPage(),
+  final bottomNavBarPages = [
+    const FeedPage(),
     ProfilePage(),
   ];
 
@@ -20,24 +20,20 @@ class HomePage extends HookConsumerWidget {
     return Scaffold(
       body: bottomNavBarPages.elementAt(state.currentBottomNavBarIndex),
       bottomNavigationBar: HookConsumer(
-        builder: (context, ref, child) {
-          final state = useHomeState(ref);
-
-          return BottomNavigationBar(
-            currentIndex: state.currentBottomNavBarIndex,
-            onTap: viewModel.updateBottomNavBarIndex,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.feed),
-                label: 'Feed',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-          );
-        },
+        builder: (context, ref, child) => BottomNavigationBar(
+          currentIndex: state.currentBottomNavBarIndex,
+          onTap: viewModel.updateBottomNavBarIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.feed),
+              label: 'Feed',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }

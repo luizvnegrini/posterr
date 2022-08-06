@@ -17,6 +17,7 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = readFeedViewModel(ref);
     final controller = useTextEditingController();
+    final state = useFeedState(ref);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +28,9 @@ class FeedPage extends HookConsumerWidget {
           onRefresh: viewModel.loadUserFeed,
           child: HookConsumer(
             builder: (context, ref, child) {
-              final state = useFeedState(ref);
+              if (state.postCreated) {
+                controller.text = '';
+              }
 
               if (state.isLoading) {
                 return const Center(child: CircularProgressIndicator());

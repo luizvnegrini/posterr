@@ -42,10 +42,13 @@ class _App extends StatelessWidget {
           data: (state) => ProviderScope(
             overrides: [
               userId.overrideWithValue(state.sharedDependencies.userId),
-              fetchPostSettings.overrideWithValue(
-                  state.sharedDependencies.fetchPostSettings),
-              fetchPosts.overrideWithValue(state.sharedDependencies.fetchPosts),
+              fetchPostSettings
+                  .overrideWithValue(state.mainDependencies.fetchPostSettings),
+              fetchPosts.overrideWithValue(state.mainDependencies.fetchPosts),
+              fetchUserPosts
+                  .overrideWithValue(state.profileDependencies.fetchUserPosts),
               createPost.overrideWithValue(state.sharedDependencies.createPost),
+              fetchUser.overrideWithValue(state.profileDependencies.fetchUser),
             ],
             child: const AppLoadedRoot(),
           ),

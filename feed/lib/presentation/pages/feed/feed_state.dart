@@ -11,9 +11,9 @@ abstract class IFeedState extends ViewModelState {
   IFeedState copyWith({
     List<Post>? feed,
     bool? isLoading,
-    PostSettings? postSettings,
     bool? isPostFormValid,
     bool? postCreated,
+    PostSettings? postSettings,
   });
 }
 
@@ -32,7 +32,6 @@ class FeedState extends IFeedState {
   List<Object?> get props => [
         feedItems,
         isLoading,
-        postSettings,
         isPostFormValid,
         postCreated,
       ];
@@ -41,11 +40,11 @@ class FeedState extends IFeedState {
   @override
   final bool isLoading;
   @override
-  final PostSettings? postSettings;
-  @override
   final bool isPostFormValid;
   @override
   final bool postCreated;
+  @override
+  final PostSettings? postSettings;
 
   @override
   IFeedState copyWith({
@@ -59,8 +58,8 @@ class FeedState extends IFeedState {
       FeedState(
         feedItems: feed ?? feedItems,
         isLoading: isLoading ?? this.isLoading,
-        postSettings: postSettings ?? this.postSettings,
         isPostFormValid: isPostFormValid ?? this.isPostFormValid,
         postCreated: postCreated ?? this.postCreated,
+        postSettings: postSettings ?? this.postSettings,
       );
 }

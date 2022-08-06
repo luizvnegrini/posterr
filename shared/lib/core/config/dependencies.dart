@@ -1,5 +1,4 @@
 import 'package:dependencies/dependencies.dart';
-import 'package:shared/data/repositories/post_settings_repository.dart';
 
 import '../../shared.dart';
 
@@ -10,7 +9,6 @@ abstract class ISharedDependencies {
 
   //usecases
   abstract final ICreatePost createPost;
-  abstract final IFetchPostSettings fetchPostSettings;
   abstract final IFetchPosts fetchPosts;
 
   //datasources
@@ -31,8 +29,6 @@ class SharedDependencies implements ISharedDependencies {
   @override
   final ICreatePost createPost;
   @override
-  final IFetchPostSettings fetchPostSettings;
-  @override
   final IFetchPosts fetchPosts;
 
   //datasources
@@ -49,7 +45,6 @@ class SharedDependencies implements ISharedDependencies {
     required this.postSettingsRepository,
     required this.userId,
     required this.createPost,
-    required this.fetchPostSettings,
     required this.fetchPosts,
   });
 
@@ -58,16 +53,14 @@ class SharedDependencies implements ISharedDependencies {
     await storage.ready;
 
     final cacheStorageAdapter = LocalStorageAdapter(localStorage: storage);
-    final postSettingsRepository = PostSettingsRepository(cacheStorageAdapter);
     final userRepository = UserRepository(cacheStorageAdapter);
 
     return SharedDependencies(
       localStorageDataSource: cacheStorageAdapter,
       userRepository: userRepository,
-      postSettingsRepository: postSettingsRepository,
+      postSettingsRepository: PostSettingsRepository(cacheStorageAdapter),
       userId: 5,
       createPost: CreatePost(userRepository),
-      fetchPostSettings: FetchPostSettings(postSettingsRepository),
       fetchPosts: FetchPosts(userRepository),
     );
   }

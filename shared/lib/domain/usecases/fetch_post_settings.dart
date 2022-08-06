@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
-import 'package:shared/shared.dart';
+
+import '../../shared.dart';
 
 abstract class IFetchPostSettings {
   Future<Either<PostSettingsFailure, PostSettings?>> call();

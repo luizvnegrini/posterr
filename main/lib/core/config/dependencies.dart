@@ -4,6 +4,7 @@ import '../../domain/domain.dart';
 
 abstract class IMainDependencies {
   //repositories
+  abstract final IPostSettingsRepository postSettingsRepository;
 
   //usecases
   abstract final ICreateUsers createUsers;
@@ -19,6 +20,8 @@ abstract class IMainDependencies {
 
 class MainDependencies implements IMainDependencies {
   //repositories
+  @override
+  final IPostSettingsRepository postSettingsRepository;
 
   //usecases
   @override
@@ -38,6 +41,7 @@ class MainDependencies implements IMainDependencies {
 
   @override
   MainDependencies({
+    required this.postSettingsRepository,
     required this.createUsers,
     required this.fetchPosts,
     required this.fetchPostSettings,
@@ -45,12 +49,17 @@ class MainDependencies implements IMainDependencies {
     required this.createPost,
   });
 
-  static MainDependencies load(SharedDependencies sharedDependencies) =>
-      MainDependencies(
-        createUsers: CreateUsers(sharedDependencies.userRepository),
-        fetchPosts: sharedDependencies.fetchPosts,
-        fetchPostSettings: sharedDependencies.fetchPostSettings,
-        userId: sharedDependencies.userId,
-        createPost: sharedDependencies.createPost,
-      );
+  static MainDependencies load(SharedDependencies sharedDependencies) {
+    final postSettingsRepository =
+        PostSettingsRepository(sharedDependencies.localStorageDataSource);
+
+    return MainDependencies(
+      postSettingsRepository: postSettingsRepository,
+      createUsers: CreateUsers(sharedDependencies.userRepository),
+      fetchPosts: FetchPosts(sharedDependencies.userRepository),
+      fetchPostSettings: FetchPostSettings(postSettingsRepository),
+      userId: sharedDependencies.userId,
+      createPost: sharedDependencies.createPost,
+    );
+  }
 }

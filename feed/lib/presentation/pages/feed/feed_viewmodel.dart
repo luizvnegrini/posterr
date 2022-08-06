@@ -86,6 +86,11 @@ class FeedViewModel extends IFeedViewModel {
 
   @override
   Future<void> createNewPost(String text) async {
+    state = state.copyWith(
+      isLoading: true,
+      postCreated: false,
+    );
+
     final createPostResponse = await createPost(
       Post.original(
         userId: userId,
@@ -96,7 +101,10 @@ class FeedViewModel extends IFeedViewModel {
 
     await createPostResponse.fold(
       (l) => throw UnimplementedError(),
-      (r) async => await loadUserFeed(),
+      (r) async {
+        state = state.copyWith(postCreated: true);
+        await loadUserFeed();
+      },
     );
   }
 }

@@ -6,75 +6,71 @@ import '../../../profile.dart';
 final profileViewModel =
     StateNotifierProvider.autoDispose<IProfileViewModel, IProfileState>(
   (ref) => ProfileViewModel(
-    fetchPostSettings: ref.read(fetchPostSettings),
-    fetchPosts: ref.read(fetchPosts),
-    createPost: ref.read(createPost),
-    userId: ref.read(userId),
-  ),
+      createPost: ref.read(createPost),
+      userId: ref.read(userId),
+      fetchUserPosts: ref.read(fetchUserPosts),
+      fetchUser: ref.read(fetchUser)),
 );
 
 abstract class IProfileViewModel extends ViewModel<IProfileState> {
   IProfileViewModel(ProfileState state) : super(state);
 
-  abstract final IFetchPostSettings fetchPostSettings;
-  abstract final IFetchPosts fetchPosts;
   abstract final ICreatePost createPost;
+  abstract final IFetchUserPosts fetchUserPosts;
+  abstract final IFetchUser fetchUser;
   abstract final int userId;
-  Future<void> loadUserFeed();
-  Future<void> loadPostSettings();
+  Future<void> loadUserPosts(int userId);
+  Future<void> loadUser(int userId);
   Future<void> createNewPost(String text);
   void checkIsPostFormValid(String text);
 }
 
 class ProfileViewModel extends IProfileViewModel {
   @override
-  final IFetchPostSettings fetchPostSettings;
-  @override
-  final IFetchPosts fetchPosts;
-  @override
   final ICreatePost createPost;
   @override
   final int userId;
+  @override
+  final IFetchUserPosts fetchUserPosts;
+  @override
+  final IFetchUser fetchUser;
 
   ProfileViewModel({
-    required this.fetchPostSettings,
-    required this.fetchPosts,
     required this.createPost,
     required this.userId,
+    required this.fetchUserPosts,
+    required this.fetchUser,
   }) : super(ProfileState.initial());
 
   @override
   Future<void> initViewModel() async {
     super.initViewModel();
+
     state = state.copyWith(isLoading: true);
     await Future.wait([
-      loadUserFeed(),
-      loadPostSettings(),
+      loadUserPosts(userId),
+      loadUser(userId),
     ]);
     state = state.copyWith(isLoading: false);
   }
 
   @override
-  Future<void> loadUserFeed() async {
-    final response = await fetchPosts();
+  Future<void> loadUserPosts(int userId) async {
+    final response = await fetchUserPosts(userId);
 
-    final newState = response.fold<IProfileState>(
+    response.fold(
       (l) => throw UnimplementedError(),
-      (posts) => state = state.copyWith(feed: posts),
+      (posts) => state = state.copyWith(posts: posts),
     );
-
-    state = newState.copyWith(isLoading: false);
   }
 
   @override
-  Future<void> loadPostSettings() async {
-    final postSettingsResponse = await fetchPostSettings();
+  Future<void> loadUser(int userId) async {
+    final response = await fetchUser(userId);
 
-    postSettingsResponse.fold(
+    response.fold(
       (l) => throw UnimplementedError(),
-      (postSettings) => state = state.copyWith(
-        postSettings: postSettings,
-      ),
+      (user) => state = state.copyWith(user: user),
     );
   }
 
@@ -85,6 +81,8 @@ class ProfileViewModel extends IProfileViewModel {
 
   @override
   Future<void> createNewPost(String text) async {
+    state = state.copyWith(isLoading: true);
+
     final createPostResponse = await createPost(
       Post.original(
         userId: userId,
@@ -95,7 +93,9 @@ class ProfileViewModel extends IProfileViewModel {
 
     await createPostResponse.fold(
       (l) => throw UnimplementedError(),
-      (r) async => await loadUserFeed(),
+      (r) async => await loadUserPosts(userId),
     );
+
+    state = state.copyWith(isLoading: false);
   }
 }
