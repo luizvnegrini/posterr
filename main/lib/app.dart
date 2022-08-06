@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
+import 'package:feed/feed.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -108,6 +109,7 @@ class AppLoadedRoot extends HookConsumerWidget {
         routes: <String, Widget Function(BuildContext)>{}..addEntries(
             [
               ...mainRoutes,
+              ...feedRoutes,
               ...profileRoutes,
             ],
           ),

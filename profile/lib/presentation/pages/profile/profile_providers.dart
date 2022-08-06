@@ -4,8 +4,8 @@ import 'package:dependencies/dependencies.dart';
 import '../../presentation.dart';
 
 //vm's
-IProfileViewModel readHomeVM(WidgetRef ref) =>
+IProfileViewModel readProfileViewModel(WidgetRef ref) =>
     ref.read(profileViewModel.notifier);
 
 //states
-IProfileState useHomeState(WidgetRef ref) => ref.watch(profileViewModel);
+IProfileState useProfileState(WidgetRef ref) => ref.watch(profileViewModel);

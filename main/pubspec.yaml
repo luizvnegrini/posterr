@@ -23,6 +23,9 @@ dependencies:
   shared:
     path: ../shared
 
+  feed:
+    path: ../feed
+
   profile:
     path: ../profile
 

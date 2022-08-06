@@ -1,8 +1,10 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:dependencies/dependencies.dart';
+import 'package:feed/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:main/core/config/dependencies.dart';
+import 'package:profile/profile.dart';
 import 'package:shared/shared.dart';
 
 import 'app_state.dart';
@@ -46,6 +48,8 @@ class AppViewModel extends IAppViewModel {
       AppState(
         sharedDependencies: sharedDependencies,
         mainDependencies: MainDependencies.load(sharedDependencies),
+        feedDependencies: FeedDependencies.load(sharedDependencies),
+        profileDependencies: ProfileDependencies.load(sharedDependencies),
       ),
     );
   }
