@@ -86,56 +86,63 @@ class SeedInitialData {
 
       for (var i = 1; i < 6; i++) {
         if (i == _userId) {
-          final uPosts = <Post>[
-            Post.original(
-              userId: i,
-              text: 'Hello! This is my 1 post!!',
-              creationDate: now.add(const Duration(days: -1)),
-            ),
-            Post.quote(
-              userId: i,
-              text: 'This is quote post',
-              relatedPost: posts[0],
-              author: users.firstWhere((user) => user.id == 1),
-              creationDate: now.add(const Duration(days: -2)),
-            ),
-            Post.repost(
-              userId: i,
-              relatedPost: posts[1],
-              creationDate: now.add(const Duration(days: -3)),
-            ),
-            Post.repost(
-              userId: i,
-              relatedPost: posts[2],
-              creationDate: now.add(const Duration(days: -4)),
-            ),
-            Post.repost(
-              userId: i,
-              relatedPost: posts[3],
-              creationDate: now.add(const Duration(days: -5)),
-            ),
-          ];
           final user = User(
             id: i,
             username: 'Luiz Negrini',
             joinedDate: DateTime(2021, 3, 25),
-            posts: uPosts,
           );
+
+          final uPosts = <Post>[
+            Post.original(
+              id: 5,
+              author: user,
+              text: 'Hello! This is my 1 post!!',
+              creationDate: now.add(const Duration(days: -1)),
+            ),
+            Post.quote(
+              id: 6,
+              text: 'This is a quote post',
+              author: user,
+              relatedPost: users[0].posts[0],
+              creationDate: now.add(const Duration(days: -2)),
+            ),
+            Post.repost(
+              id: 7,
+              author: users[1],
+              relatedPost: users[1].posts[0],
+              creationDate: now.add(const Duration(days: -3)),
+            ),
+            Post.repost(
+              id: 8,
+              author: users[2],
+              relatedPost: users[2].posts[0],
+              creationDate: now.add(const Duration(days: -4)),
+            ),
+            Post.repost(
+              id: 9,
+              author: users[3],
+              relatedPost: users[3].posts[0],
+              creationDate: now.add(const Duration(days: -5)),
+            ),
+          ];
+
+          user.updatePosts(uPosts);
 
           users.add(user);
           posts.addAll(uPosts);
         } else {
-          final post = Post.original(
-            userId: i,
-            text: 'Hello! This is my $i post!!',
-            creationDate: now,
-          );
           final user = User(
             id: i,
             username: 'User gen. $i',
             joinedDate: DateTime.now(),
-            posts: <Post>[post],
           );
+          final post = Post.original(
+            id: i,
+            author: user,
+            text: 'Hello! This is my first post!!',
+            creationDate: now,
+          );
+          user.updatePosts(<Post>[post]);
 
           users.add(user);
           posts.add(post);

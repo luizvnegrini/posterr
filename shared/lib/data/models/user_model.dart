@@ -15,12 +15,12 @@ class UserModel {
     required this.joinedDate,
   });
 
-  User toEntity() => User(
-        id: id,
-        joinedDate: joinedDate,
-        posts: posts.map<Post>((x) => x.toEntity()).toList(),
-        username: username,
-      );
+  // User toEntity() => User(
+  //       id: id,
+  //       joinedDate: joinedDate,
+  //       posts: posts.map<Post>((x) => x.toEntity()).toList(),
+  //       username: username,
+  //     );
 
   factory UserModel.fromEntity(User entity) => UserModel(
         id: entity.id,

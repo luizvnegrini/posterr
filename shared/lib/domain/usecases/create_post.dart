@@ -19,7 +19,7 @@ class CreatePost implements ICreatePost {
           PostFailure(type: ExceptionType.notFound),
         ),
         (users) async {
-          users.firstWhere((user) => user.id == post.userId).posts.add(post);
+          users.firstWhere((user) => user.id == post.author.id).posts.add(post);
 
           await _repository.saveUsers(users);
         },

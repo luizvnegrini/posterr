@@ -2,16 +2,14 @@ import 'package:shared/shared.dart';
 
 abstract class IProfileState extends ViewModelState {
   const IProfileState();
-  abstract final PostSettings? postSettings;
   abstract final User? user;
-  abstract final List<Post>? posts;
   abstract final bool isLoading;
+  abstract final PostSettings? postSettings;
   abstract final bool isPostFormValid;
   abstract final bool postCreated;
 
   IProfileState copyWith({
     User? user,
-    List<Post>? posts,
     bool? isLoading,
     PostSettings? postSettings,
     bool? isPostFormValid,
@@ -22,7 +20,6 @@ abstract class IProfileState extends ViewModelState {
 class ProfileState extends IProfileState {
   const ProfileState({
     this.user,
-    this.posts,
     this.postSettings,
     this.isLoading = false,
     this.isPostFormValid = false,
@@ -33,7 +30,7 @@ class ProfileState extends IProfileState {
 
   @override
   List<Object?> get props => [
-        posts,
+        user,
         postCreated,
         isLoading,
         postSettings,
@@ -48,14 +45,11 @@ class ProfileState extends IProfileState {
   @override
   final bool postCreated;
   @override
-  final List<Post>? posts;
-  @override
   final User? user;
 
   @override
   IProfileState copyWith({
     user,
-    posts,
     isLoading,
     postSettings,
     isPostFormValid,
@@ -63,7 +57,6 @@ class ProfileState extends IProfileState {
   }) =>
       ProfileState(
         user: user ?? this.user,
-        posts: posts ?? this.posts,
         isLoading: isLoading ?? this.isLoading,
         postSettings: postSettings ?? this.postSettings,
         isPostFormValid: isPostFormValid ?? this.isPostFormValid,

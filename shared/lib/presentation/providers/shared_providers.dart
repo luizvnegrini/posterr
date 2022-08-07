@@ -15,3 +15,6 @@ final fetchPosts = Provider.autoDispose<IFetchPosts>((_) {
 final createPost = Provider.autoDispose<ICreatePost>((_) {
   throw UnimplementedError('createPost usecase Provider must be overridden');
 });
+final fetchUser = Provider.autoDispose<IFetchUser>((_) {
+  throw UnimplementedError('fetchUser usecase Provider must be overridden');
+});

@@ -1,11 +1,9 @@
-import 'package:profile/profile.dart';
 import 'package:shared/shared.dart';
 
 abstract class IProfileDependencies {
   //repositories
 
   //usecases
-  abstract final IFetchUserPosts fetchUserPosts;
   abstract final IFetchUser fetchUser;
 
   //datasources
@@ -19,8 +17,6 @@ class ProfileDependencies implements IProfileDependencies {
 
   //usecases
   @override
-  IFetchUserPosts fetchUserPosts;
-  @override
   IFetchUser fetchUser;
 
   //datasources
@@ -32,14 +28,12 @@ class ProfileDependencies implements IProfileDependencies {
   @override
   ProfileDependencies({
     required this.userId,
-    required this.fetchUserPosts,
     required this.fetchUser,
   });
 
   static ProfileDependencies load(SharedDependencies sharedDependencies) =>
       ProfileDependencies(
         userId: sharedDependencies.userId,
-        fetchUserPosts: FetchUserPosts(sharedDependencies.userRepository),
         fetchUser: FetchUser(sharedDependencies.userRepository),
       );
 }

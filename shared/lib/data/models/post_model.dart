@@ -1,63 +1,65 @@
 import '../../shared.dart';
 
 class PostModel {
-  final int userId;
+  final int id;
   final String? text;
-  final UserModel? author;
+  final int authorId;
   final PostTypeModel type;
-  final PostModel? relatedPost;
+  final int? relatedPostId;
   final DateTime creationDate;
 
   PostModel.original({
-    required this.userId,
+    required this.id,
+    required this.authorId,
     required this.text,
     required this.creationDate,
-  })  : relatedPost = null,
-        author = null,
+  })  : relatedPostId = null,
         type = PostTypeModel.post;
 
   PostModel.repost({
-    required this.relatedPost,
-    required this.userId,
+    required this.id,
+    required this.relatedPostId,
+    required this.authorId,
     required this.creationDate,
   })  : text = null,
-        type = PostTypeModel.repost,
-        author = null;
+        type = PostTypeModel.repost;
 
   PostModel.quote({
+    required this.id,
     required this.text,
-    required this.relatedPost,
-    required this.author,
-    required this.userId,
+    required this.relatedPostId,
+    required this.authorId,
     required this.creationDate,
   }) : type = PostTypeModel.quote;
 
-  Post toEntity() {
-    switch (type) {
-      case PostTypeModel.post:
-        return Post.original(
-          userId: userId,
-          text: text,
-          creationDate: creationDate,
-        );
-      case PostTypeModel.quote:
-        return Post.quote(
-          userId: userId,
-          text: text,
-          relatedPost: relatedPost?.toEntity(),
-          author: author?.toEntity(),
-          creationDate: creationDate,
-        );
-      case PostTypeModel.repost:
-        return Post.repost(
-          userId: userId,
-          relatedPost: relatedPost?.toEntity(),
-          creationDate: creationDate,
-        );
-      default:
-        throw UnimplementedError();
-    }
-  }
+  // Post toEntity() {
+  //   switch (type) {
+  //     case PostTypeModel.post:
+  //       return Post.original(
+  //         id: id,
+  //         authorId: authorId,
+  //         text: text,
+  //         creationDate: creationDate,
+  //       );
+  //     case PostTypeModel.quote:
+  //       return Post.quote(
+  //         id: id,
+  //         text: text,
+  //         relatedPostId: relatedPostId,
+  //         authorId: authorId,
+  //         creationDate: creationDate,
+  //       );
+  //     case PostTypeModel.repost:
+  //       return Post.repost(
+  //         id: id,
+  //         authorId: authorId,
+  //         relatedPostId: relatedPostId,
+  //         creationDate: creationDate,
+  //       );
+  //     default:
+  //       throw UnimplementedError();
+  //   }
+  // }
 
   factory PostModel.fromEntity(
     Post entity,
@@ -65,22 +67,24 @@ class PostModel {
     switch (entity.type) {
       case PostType.post:
         return PostModel.original(
-          userId: entity.userId,
+          id: entity.id,
+          authorId: entity.author.id,
           text: entity.text,
           creationDate: entity.creationDate,
         );
       case PostType.quote:
         return PostModel.quote(
-          userId: entity.userId,
+          id: entity.id,
           text: entity.text,
-          relatedPost: PostModel.fromEntity(entity.relatedPost!),
-          author: UserModel.fromEntity(entity.author!),
+          relatedPostId: entity.relatedPost!.id,
+          authorId: entity.author.id,
           creationDate: entity.creationDate,
         );
       case PostType.repost:
         return PostModel.repost(
-          userId: entity.userId,
-          relatedPost: PostModel.fromEntity(entity.relatedPost!),
+          id: entity.id,
+          authorId: entity.author.id,
+          relatedPostId: entity.relatedPost!.id,
           creationDate: entity.creationDate,
         );
       default:
@@ -89,10 +93,10 @@ class PostModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'author': author?.toJson(),
-        'userId': userId,
+        'id': id,
+        'authorId': authorId,
         'text': text,
-        'relatedPost': relatedPost?.toJson(),
+        'relatedPostId': relatedPostId,
         'type': type.toJson(),
         'creationDate': creationDate.toIso8601String(),
       };
@@ -103,22 +107,25 @@ class PostModel {
     switch (type) {
       case PostTypeModel.post:
         return PostModel.original(
-          userId: json['userId'],
+          id: json['id'],
+          authorId: json['authorId'],
           text: json['text'],
           creationDate: DateTime.parse(json['creationDate']),
         );
       case PostTypeModel.quote:
         return PostModel.quote(
-            userId: json['userId'],
-            text: json['text'],
-            relatedPost: PostModel.fromJson(json['relatedPost']),
-            creationDate: DateTime.parse(json['creationDate']),
-            author: UserModel.fromJson(json['author']));
+          id: json['id'],
+          text: json['text'],
+          relatedPostId: json['relatedPostId'],
+          creationDate: DateTime.parse(json['creationDate']),
+          authorId: json['authorId'],
+        );
       case PostTypeModel.repost:
         return PostModel.repost(
-          userId: json['userId'],
+          id: json['id'],
+          authorId: json['authorId'],
           creationDate: DateTime.parse(json['creationDate']),
-          relatedPost: PostModel.fromJson(json['relatedPost']),
+          relatedPostId: json['relatedPostId'],
         );
       default:
         throw UnimplementedError();

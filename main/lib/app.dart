@@ -45,8 +45,6 @@ class _App extends StatelessWidget {
               fetchPostSettings
                   .overrideWithValue(state.mainDependencies.fetchPostSettings),
               fetchPosts.overrideWithValue(state.mainDependencies.fetchPosts),
-              fetchUserPosts
-                  .overrideWithValue(state.profileDependencies.fetchUserPosts),
               createPost.overrideWithValue(state.sharedDependencies.createPost),
               fetchUser.overrideWithValue(state.profileDependencies.fetchUser),
             ],

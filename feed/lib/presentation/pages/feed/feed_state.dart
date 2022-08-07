@@ -7,6 +7,7 @@ abstract class IFeedState extends ViewModelState {
   abstract final bool isLoading;
   abstract final bool isPostFormValid;
   abstract final bool postCreated;
+  abstract final User? user;
 
   IFeedState copyWith({
     List<Post>? feed,
@@ -14,6 +15,7 @@ abstract class IFeedState extends ViewModelState {
     bool? isPostFormValid,
     bool? postCreated,
     PostSettings? postSettings,
+    User? user,
   });
 }
 
@@ -21,6 +23,7 @@ class FeedState extends IFeedState {
   const FeedState({
     this.feedItems,
     this.postSettings,
+    this.user,
     this.isLoading = false,
     this.isPostFormValid = false,
     this.postCreated = false,
@@ -34,6 +37,7 @@ class FeedState extends IFeedState {
         isLoading,
         isPostFormValid,
         postCreated,
+        user,
       ];
   @override
   final List<Post>? feedItems;
@@ -45,6 +49,8 @@ class FeedState extends IFeedState {
   final bool postCreated;
   @override
   final PostSettings? postSettings;
+  @override
+  final User? user;
 
   @override
   IFeedState copyWith({
@@ -54,6 +60,7 @@ class FeedState extends IFeedState {
     isPostFormValid,
     postCreated,
     currentBottomNavBarIndex,
+    user,
   }) =>
       FeedState(
         feedItems: feed ?? feedItems,
@@ -61,5 +68,6 @@ class FeedState extends IFeedState {
         isPostFormValid: isPostFormValid ?? this.isPostFormValid,
         postCreated: postCreated ?? this.postCreated,
         postSettings: postSettings ?? this.postSettings,
+        user: user ?? this.user,
       );
 }
