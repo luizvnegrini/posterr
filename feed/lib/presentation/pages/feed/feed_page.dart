@@ -39,10 +39,6 @@ class FeedPage extends HookConsumerWidget {
                   }
                 });
 
-                if (state.postCreated) {
-                  controller.text = '';
-                }
-
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -62,7 +58,12 @@ class FeedPage extends HookConsumerWidget {
                             onTap: () {
                               if (_errorText(controller.text, state) == null) {
                                 _submit(
-                                    context, viewModel, state, controller.text);
+                                  context,
+                                  controller,
+                                  viewModel,
+                                  state,
+                                  controller.text,
+                                );
 
                                 if (state.postCreated) {
                                   controller.clear();
@@ -84,6 +85,7 @@ class FeedPage extends HookConsumerWidget {
                           if (_errorText(controller.text, state) == null) {
                             _submit(
                               context,
+                              controller,
                               viewModel,
                               state,
                               text,
@@ -183,12 +185,13 @@ class FeedPage extends HookConsumerWidget {
 
   void _submit(
     BuildContext context,
+    TextEditingController controller,
     IFeedViewModel viewModel,
     IFeedState state,
     String text,
   ) {
     if (state.isPostFormValid) {
-      viewModel.createNewPost(text);
+      viewModel.createNewPost(text).then((_) => controller.clear());
     }
   }
 

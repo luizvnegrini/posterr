@@ -99,6 +99,7 @@ class ProfilePage extends HookConsumerWidget {
                                       null) {
                                     _submit(
                                       context,
+                                      controller,
                                       viewModel,
                                       state,
                                       controller.text,
@@ -124,6 +125,7 @@ class ProfilePage extends HookConsumerWidget {
                               if (_errorText(controller.text, state) == null) {
                                 _submit(
                                   context,
+                                  controller,
                                   viewModel,
                                   state,
                                   text,
@@ -249,12 +251,13 @@ class ProfilePage extends HookConsumerWidget {
 
   void _submit(
     BuildContext context,
+    TextEditingController controller,
     IProfileViewModel viewModel,
     IProfileState state,
     String text,
   ) {
     if (state.isPostFormValid) {
-      viewModel.createNewPost(text);
+      viewModel.createNewPost(text).then((_) => controller.clear());
     }
   }
 }
