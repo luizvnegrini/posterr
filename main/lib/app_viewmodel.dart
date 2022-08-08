@@ -97,32 +97,32 @@ class SeedInitialData {
               id: 5,
               author: user,
               text: 'Hello! This is my 1 post!!',
-              creationDate: now.add(const Duration(days: -1)),
+              creationDate: now.add(const Duration(days: -2)),
             ),
             Post.quote(
               id: 6,
               text: 'This is a quote post',
               author: user,
               relatedPost: users[0].posts[0],
-              creationDate: now.add(const Duration(days: -2)),
+              creationDate: now.add(const Duration(days: -3)),
             ),
             Post.repost(
               id: 7,
               author: users[1],
               relatedPost: users[1].posts[0],
-              creationDate: now.add(const Duration(days: -3)),
+              creationDate: now.add(const Duration(days: -4)),
             ),
             Post.repost(
               id: 8,
               author: users[2],
               relatedPost: users[2].posts[0],
-              creationDate: now.add(const Duration(days: -4)),
+              creationDate: now.add(const Duration(days: -5)),
             ),
             Post.repost(
               id: 9,
               author: users[3],
               relatedPost: users[3].posts[0],
-              creationDate: now.add(const Duration(days: -5)),
+              creationDate: now.add(const Duration(days: -6)),
             ),
           ];
 

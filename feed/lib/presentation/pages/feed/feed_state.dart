@@ -6,6 +6,7 @@ abstract class IFeedState extends ViewModelState {
   abstract final PostSettings? postSettings;
   abstract final bool isLoading;
   abstract final bool isPostFormValid;
+  abstract final bool dailyLimitOfPostsExceeded;
   abstract final bool postCreated;
   abstract final User? user;
 
@@ -16,6 +17,7 @@ abstract class IFeedState extends ViewModelState {
     bool? postCreated,
     PostSettings? postSettings,
     User? user,
+    bool? dailyLimitOfPostsExceeded,
   });
 }
 
@@ -27,6 +29,7 @@ class FeedState extends IFeedState {
     this.isLoading = false,
     this.isPostFormValid = false,
     this.postCreated = false,
+    this.dailyLimitOfPostsExceeded = false,
   });
 
   factory FeedState.initial() => const FeedState();
@@ -34,10 +37,12 @@ class FeedState extends IFeedState {
   @override
   List<Object?> get props => [
         feedItems,
+        postSettings,
         isLoading,
         isPostFormValid,
         postCreated,
         user,
+        dailyLimitOfPostsExceeded,
       ];
   @override
   final List<Post>? feedItems;
@@ -51,6 +56,8 @@ class FeedState extends IFeedState {
   final PostSettings? postSettings;
   @override
   final User? user;
+  @override
+  final bool dailyLimitOfPostsExceeded;
 
   @override
   IFeedState copyWith({
@@ -61,6 +68,7 @@ class FeedState extends IFeedState {
     postCreated,
     currentBottomNavBarIndex,
     user,
+    dailyLimitOfPostsExceeded,
   }) =>
       FeedState(
         feedItems: feed ?? feedItems,
@@ -69,5 +77,7 @@ class FeedState extends IFeedState {
         postCreated: postCreated ?? this.postCreated,
         postSettings: postSettings ?? this.postSettings,
         user: user ?? this.user,
+        dailyLimitOfPostsExceeded:
+            dailyLimitOfPostsExceeded ?? this.dailyLimitOfPostsExceeded,
       );
 }

@@ -7,6 +7,7 @@ abstract class IProfileState extends ViewModelState {
   abstract final PostSettings? postSettings;
   abstract final bool isPostFormValid;
   abstract final bool postCreated;
+  abstract final bool dailyLimitOfPostsExceeded;
 
   IProfileState copyWith({
     User? user,
@@ -14,6 +15,7 @@ abstract class IProfileState extends ViewModelState {
     PostSettings? postSettings,
     bool? isPostFormValid,
     bool? postCreated,
+    bool? dailyLimitOfPostsExceeded,
   });
 }
 
@@ -24,6 +26,7 @@ class ProfileState extends IProfileState {
     this.isLoading = false,
     this.isPostFormValid = false,
     this.postCreated = false,
+    this.dailyLimitOfPostsExceeded = false,
   });
 
   factory ProfileState.initial() => const ProfileState();
@@ -35,6 +38,7 @@ class ProfileState extends IProfileState {
         isLoading,
         postSettings,
         isPostFormValid,
+        dailyLimitOfPostsExceeded,
       ];
   @override
   final bool isLoading;
@@ -46,6 +50,8 @@ class ProfileState extends IProfileState {
   final bool postCreated;
   @override
   final User? user;
+  @override
+  final bool dailyLimitOfPostsExceeded;
 
   @override
   IProfileState copyWith({
@@ -54,6 +60,7 @@ class ProfileState extends IProfileState {
     postSettings,
     isPostFormValid,
     postCreated,
+    dailyLimitOfPostsExceeded,
   }) =>
       ProfileState(
         user: user ?? this.user,
@@ -61,5 +68,7 @@ class ProfileState extends IProfileState {
         postSettings: postSettings ?? this.postSettings,
         isPostFormValid: isPostFormValid ?? this.isPostFormValid,
         postCreated: postCreated ?? this.postCreated,
+        dailyLimitOfPostsExceeded:
+            dailyLimitOfPostsExceeded ?? this.dailyLimitOfPostsExceeded,
       );
 }

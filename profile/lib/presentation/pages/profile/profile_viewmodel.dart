@@ -61,7 +61,10 @@ class ProfileViewModel extends IProfileViewModel {
 
     response.fold(
       (l) => throw UnimplementedError(),
-      (user) => state = state.copyWith(user: user),
+      (user) {
+        user.posts.sort((a, b) => b.creationDate.compareTo(a.creationDate));
+        state = state.copyWith(user: user);
+      },
     );
   }
 
@@ -75,16 +78,19 @@ class ProfileViewModel extends IProfileViewModel {
     state = state.copyWith(isLoading: true);
 
     final createPostResponse = await createPost(
-      Post.original(
-        id: 999, //TODO: atualizar aqui
-        author: state.user!,
-        creationDate: DateTime.now(),
-        text: text,
-      ),
+      text: text,
+      userId: userId,
     );
 
-    await createPostResponse.fold(
-      (l) => throw UnimplementedError(),
+    createPostResponse.fold(
+      (failure) {
+        if (failure.type == ExceptionType.dailyLimitExceeded) {
+          state = state.copyWith(
+            dailyLimitOfPostsExceeded: true,
+            isLoading: false,
+          );
+        }
+      },
       (r) async => await loadUser(userId),
     );
 

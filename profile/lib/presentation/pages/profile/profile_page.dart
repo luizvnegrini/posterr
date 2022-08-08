@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:profile/profile.dart';
 import 'package:shared/shared.dart';
@@ -30,6 +31,12 @@ class ProfilePage extends HookConsumerWidget {
         ? const Center(child: CircularProgressIndicator())
         : Builder(
             builder: (context) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                if (state.dailyLimitOfPostsExceeded) {
+                  await _openBottomSheet(context);
+                }
+              });
+
               final posts = state.user!.posts
                   .where((element) => element.type == PostType.post)
                   .toList();
@@ -42,156 +49,181 @@ class ProfilePage extends HookConsumerWidget {
 
               return Scaffold(
                 body: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      defaultSpacer,
-                      Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 2,
-                              ),
-                              shape: BoxShape.circle,
-                              color: Colors.grey.shade500,
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 80,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              Text(state.user!.username),
-                              Text(
-                                'Joined at: ${dateFormat.format(state.user!.joinedDate)}',
-                                style: joinedDateStyle,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      defaultSpacer,
-                      TextFormField(
-                          controller: controller,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(
-                            labelText: 'Create new post',
-                            hintText: 'What\'s happening?',
-                            errorText: _errorText(controller.text, state),
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                if (_errorText(controller.text, state) ==
-                                    null) {
-                                  _submit(viewModel, state, controller.text);
-
-                                  if (state.postCreated) {
-                                    controller.clear();
-                                  }
-                                }
-                              },
-                              child: const Icon(
-                                Icons.send,
-                              ),
-                            ),
-                          ),
-                          maxLength: state.postSettings!.maxLength,
-                          minLines: 1,
-                          maxLines: 3,
-                          onChanged: viewModel.checkIsPostFormValid,
-                          keyboardType: TextInputType.text,
-                          enabled: !state.isLoading,
-                          onFieldSubmitted: (text) {
-                            if (_errorText(controller.text, state) == null) {
-                              _submit(
-                                viewModel,
-                                state,
-                                text,
-                              );
-                              if (state.postCreated) {
-                                controller.clear();
-                              }
-                            }
-                          }),
-                      defaultSpacer,
-                      TabBar(
-                        controller: tabController,
-                        tabs: [
-                          Tab(
-                            height: 50,
-                            child: Column(
-                              children: [
-                                const Text('Posts'),
-                                Text(posts.length.toString()),
-                              ],
-                            ),
-                          ),
-                          Tab(
-                            height: 50,
-                            child: Column(
-                              children: [
-                                const Text('Reposts'),
-                                Text(reposts.length.toString()),
-                              ],
-                            ),
-                          ),
-                          Tab(
-                            height: 50,
-                            child: Column(
-                              children: [
-                                const Text('Quoted'),
-                                Text(quotedPosts.length.toString()),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      defaultSpacer,
-                      Expanded(
-                        child: TabBarView(
-                          controller: tabController,
-                          physics: const NeverScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: defaultPadding,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        defaultSpacer,
+                        Column(
                           children: [
-                            Padding(
-                              padding: defaultPadding,
-                              child: ListView.separated(
-                                itemBuilder: (context, index) => PostWidget(
-                                  post: posts[index],
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2,
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    Container(),
-                                itemCount: posts.length,
+                                shape: BoxShape.circle,
+                                color: Colors.grey.shade500,
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                size: 80,
+                                color: Colors.white,
                               ),
                             ),
-                            Padding(
-                              padding: defaultPadding,
-                              child: ListView.separated(
-                                itemBuilder: (context, index) => PostWidget(
-                                  post: reposts[index],
+                            Column(
+                              children: [
+                                Text(state.user!.username),
+                                Text(
+                                  'Joined at: ${dateFormat.format(state.user!.joinedDate)}',
+                                  style: joinedDateStyle,
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    Container(),
-                                itemCount: reposts.length,
+                              ],
+                            )
+                          ],
+                        ),
+                        defaultSpacer,
+                        TextFormField(
+                            controller: controller,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            decoration: InputDecoration(
+                              labelText: 'Create new post',
+                              hintText: 'What\'s happening?',
+                              errorText: _errorText(controller.text, state),
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  if (_errorText(controller.text, state) ==
+                                      null) {
+                                    _submit(
+                                      context,
+                                      viewModel,
+                                      state,
+                                      controller.text,
+                                    );
+
+                                    if (state.postCreated) {
+                                      controller.clear();
+                                    }
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.send,
+                                ),
                               ),
                             ),
-                            Padding(
-                              padding: defaultPadding,
-                              child: ListView.separated(
-                                itemBuilder: (context, index) => PostWidget(
-                                  post: quotedPosts[index],
-                                ),
-                                separatorBuilder: (context, index) =>
-                                    Container(),
-                                itemCount: quotedPosts.length,
+                            maxLength: state.postSettings!.maxLength,
+                            minLines: 1,
+                            maxLines: 3,
+                            onChanged: viewModel.checkIsPostFormValid,
+                            keyboardType: TextInputType.text,
+                            enabled: !state.isLoading,
+                            onFieldSubmitted: (text) {
+                              if (_errorText(controller.text, state) == null) {
+                                _submit(
+                                  context,
+                                  viewModel,
+                                  state,
+                                  text,
+                                );
+                                if (state.postCreated) {
+                                  controller.clear();
+                                }
+                              }
+                            }),
+                        defaultSpacer,
+                        TabBar(
+                          controller: tabController,
+                          tabs: [
+                            Tab(
+                              height: 50,
+                              child: Column(
+                                children: [
+                                  const Text('Posts'),
+                                  Text(posts.length.toString()),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              height: 50,
+                              child: Column(
+                                children: [
+                                  const Text('Reposts'),
+                                  Text(reposts.length.toString()),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              height: 50,
+                              child: Column(
+                                children: [
+                                  const Text('Quoted'),
+                                  Text(quotedPosts.length.toString()),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                        defaultSpacer,
+                        Expanded(
+                          child: TabBarView(
+                            controller: tabController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              ListView.separated(
+                                itemBuilder: (context, index) {
+                                  final post = posts[index];
+                                  return PostWidget(
+                                    username: post.author.username,
+                                    creationDate: post.creationDate,
+                                    text: post.text!,
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    Container(),
+                                itemCount: posts.length,
+                              ),
+                              ListView.separated(
+                                itemBuilder: (context, index) {
+                                  final post = reposts[index];
+
+                                  return RepostWidget(
+                                    relatedPostAuthorUsername:
+                                        post.relatedPost!.author.username,
+                                    relatedPostCreationDate:
+                                        post.relatedPost!.creationDate,
+                                    relatedPostText: post.relatedPost!.text!,
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    Container(),
+                                itemCount: reposts.length,
+                              ),
+                              ListView.separated(
+                                itemBuilder: (context, index) {
+                                  final post = quotedPosts[index];
+
+                                  return QuotedPostWidget(
+                                    creationDate: post.creationDate,
+                                    text: post.text!,
+                                    username: post.author.username,
+                                    relatedPostAuthorUsername:
+                                        post.relatedPost!.author.username,
+                                    relatedPostCreationDate:
+                                        post.relatedPost!.creationDate,
+                                    relatedPostText: post.relatedPost!.text!,
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    Container(),
+                                itemCount: quotedPosts.length,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -199,164 +231,28 @@ class ProfilePage extends HookConsumerWidget {
           );
   }
 
+  Future<void> _openBottomSheet(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16),
+        ),
+      ),
+      // useRootNavigator: true,
+      builder: (context) =>
+          const DailyLimitOfPostsExceededBottomContentWidget(),
+    );
+  }
+
   void _submit(
+    BuildContext context,
     IProfileViewModel viewModel,
     IProfileState state,
     String text,
   ) {
     if (state.isPostFormValid) {
       viewModel.createNewPost(text);
-    }
-  }
-}
-
-class PostWidget extends HookWidget {
-  final Post post;
-  final postDateFormatter = DateFormat.MMMMEEEEd();
-  final creationDateStyle = TextStyle(
-    color: Colors.grey.withOpacity(.5),
-    fontSize: 10,
-  );
-  final defaultSizedBox = const SizedBox(width: 10);
-
-  PostWidget({
-    required this.post,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Card(
-        elevation: 3,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  _getUserImageContainer(30),
-                ],
-              ),
-              defaultSizedBox,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        post.type == PostType.repost
-                            ? post.relatedPost!.author.username
-                            : post.author.username,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                      defaultSizedBox,
-                      const Text('·'),
-                      defaultSizedBox,
-                      Text(
-                        '${postDateFormatter.format(post.creationDate)} at ${(post.creationDate.hour).toString().padLeft(2, '0')}:${(post.creationDate.minute).toString().padLeft(2, '0')}:${(post.creationDate.second).toString().padLeft(2, '0')}',
-                        style: creationDateStyle,
-                      ),
-                    ],
-                  ),
-                  _getContent(post.type),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _getUserImageContainer(double size) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-            width: 2,
-          ),
-          shape: BoxShape.circle,
-          color: Colors.grey.shade500,
-        ),
-        child: Icon(
-          Icons.person,
-          size: size,
-          color: Colors.white,
-        ),
-      );
-
-  Widget _getContent(PostType postType) {
-    switch (postType) {
-      case PostType.post:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(post.text!),
-          ],
-        );
-      case PostType.quote:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(post.text!),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black, width: .2),
-              ),
-              padding: const EdgeInsets.all(5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      _getUserImageContainer(15),
-                    ],
-                  ),
-                  defaultSizedBox,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            post.type == PostType.post
-                                ? post.author.username
-                                : post.relatedPost!.author.username,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
-                          defaultSizedBox,
-                          const Text('·'),
-                          defaultSizedBox,
-                          Text(
-                            '${postDateFormatter.format(post.creationDate)} at ${(post.creationDate.hour).toString().padLeft(2, '0')}:${(post.creationDate.minute).toString().padLeft(2, '0')}:${(post.creationDate.second).toString().padLeft(2, '0')}',
-                            style: creationDateStyle.copyWith(fontSize: 8),
-                          ),
-                        ],
-                      ),
-                      Text(post.relatedPost!.text!)
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      case PostType.repost:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(post.relatedPost!.text!),
-          ],
-        );
-      default:
-        throw UnimplementedError();
     }
   }
 }

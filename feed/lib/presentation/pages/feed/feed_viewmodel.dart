@@ -109,16 +109,19 @@ class FeedViewModel extends IFeedViewModel {
     );
 
     final createPostResponse = await createPost(
-      Post.original(
-        id: 999, //TODO: alterar aqui depois
-        author: state.user!,
-        creationDate: DateTime.now(),
-        text: text,
-      ),
+      text: text,
+      userId: userId,
     );
 
     await createPostResponse.fold(
-      (l) => throw UnimplementedError(),
+      (failure) async {
+        if (failure.type == ExceptionType.dailyLimitExceeded) {
+          state = state.copyWith(
+            dailyLimitOfPostsExceeded: true,
+            isLoading: false,
+          );
+        }
+      },
       (r) async {
         state = state.copyWith(postCreated: true);
         await loadUserFeed();
