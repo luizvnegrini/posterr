@@ -1,22 +1,24 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:shared/shared.dart';
 
-abstract class ICreatePost {
+abstract class IRepost {
   Future<Either<PostFailure, Unit>> call({
-    required String text,
     required int userId,
+    required int relatedPostId,
+    required int relatedPostAuthorId,
   });
 }
 
-class CreatePost implements ICreatePost {
+class Repost implements IRepost {
   final IUserRepository _repository;
 
-  CreatePost(this._repository);
+  Repost(this._repository);
 
   @override
   Future<Either<PostFailure, Unit>> call({
-    required String text,
     required int userId,
+    required int relatedPostId,
+    required int relatedPostAuthorId,
   }) async {
     try {
       final usersResponse = await _repository.fetchUsers();
@@ -26,6 +28,8 @@ class CreatePost implements ICreatePost {
         ),
         (users) async {
           final user = users.firstWhere((element) => element.id == userId);
+          final relatedPostAuthor =
+              users.firstWhere((element) => element.id == relatedPostAuthorId);
           int totalPosts = 0;
 
           if (user.posts
@@ -40,11 +44,12 @@ class CreatePost implements ICreatePost {
             totalPosts += user.posts.length;
           }
 
-          user.posts.add(
-            Post.original(
+          relatedPostAuthor.posts.add(
+            Post.repost(
               author: user,
               creationDate: DateTime.now(),
-              text: text,
+              relatedPost: relatedPostAuthor.posts
+                  .firstWhere((post) => post.id == relatedPostId),
               id: totalPosts + 1,
             ),
           );

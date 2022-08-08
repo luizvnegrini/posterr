@@ -1,7 +1,6 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:feed/feed.dart';
 import 'package:shared/shared.dart';
-
-import '../../presentation.dart';
 
 final feedViewModel =
     StateNotifierProvider.autoDispose<IFeedViewModel, IFeedState>(
@@ -11,6 +10,8 @@ final feedViewModel =
     createPost: ref.read(createPost),
     userId: ref.read(userId),
     fetchUser: ref.read(fetchUser),
+    repost: ref.read(repost),
+    quotePost: ref.read(quotePost),
   ),
 );
 
@@ -20,11 +21,22 @@ abstract class IFeedViewModel extends ViewModel<IFeedState> {
   abstract final IFetchPostSettings fetchPostSettings;
   abstract final IFetchPosts fetchPosts;
   abstract final ICreatePost createPost;
+  abstract final IRepost repost;
+  abstract final IQuotePost quotePost;
   abstract final IFetchUser fetchUser;
   abstract final int userId;
   Future<void> loadUserFeed();
   Future<void> loadPostSettings();
   Future<void> createNewPost(String text);
+  Future<void> executeRepost({
+    required int relatedPostId,
+    required int authorId,
+  });
+  Future<void> executeQuotePost({
+    required String text,
+    required int relatedPostId,
+    required int authorId,
+  });
   Future<void> loadUser(int userId);
   void checkIsPostFormValid(String text);
 }
@@ -40,6 +52,10 @@ class FeedViewModel extends IFeedViewModel {
   final int userId;
   @override
   final IFetchUser fetchUser;
+  @override
+  final IRepost repost;
+  @override
+  final IQuotePost quotePost;
 
   FeedViewModel({
     required this.fetchPostSettings,
@@ -47,6 +63,8 @@ class FeedViewModel extends IFeedViewModel {
     required this.createPost,
     required this.userId,
     required this.fetchUser,
+    required this.repost,
+    required this.quotePost,
   }) : super(FeedState.initial());
 
   @override
@@ -106,14 +124,82 @@ class FeedViewModel extends IFeedViewModel {
     state = state.copyWith(
       isLoading: true,
       postCreated: false,
+      dailyLimitOfPostsExceeded: false,
     );
 
     final createPostResponse = await createPost(
       text: text,
-      userId: userId,
+      userId: state.user!.id,
     );
 
     await createPostResponse.fold(
+      (failure) async {
+        if (failure.type == ExceptionType.dailyLimitExceeded) {
+          state = state.copyWith(
+            dailyLimitOfPostsExceeded: true,
+            isLoading: false,
+          );
+        }
+      },
+      (r) async {
+        state = state.copyWith(postCreated: true);
+        await loadUserFeed();
+      },
+    );
+  }
+
+  @override
+  Future<void> executeRepost({
+    required int relatedPostId,
+    required int authorId,
+  }) async {
+    state = state.copyWith(
+      isLoading: true,
+      postCreated: false,
+      dailyLimitOfPostsExceeded: false,
+    );
+
+    final repostResponse = await repost(
+      userId: state.user!.id,
+      relatedPostAuthorId: authorId,
+      relatedPostId: relatedPostId,
+    );
+
+    await repostResponse.fold(
+      (failure) async {
+        if (failure.type == ExceptionType.dailyLimitExceeded) {
+          state = state.copyWith(
+            dailyLimitOfPostsExceeded: true,
+            isLoading: false,
+          );
+        }
+      },
+      (r) async {
+        state = state.copyWith(postCreated: true);
+        await loadUserFeed();
+      },
+    );
+  }
+
+  @override
+  Future<void> executeQuotePost({
+    required String text,
+    required int relatedPostId,
+    required int authorId,
+  }) async {
+    state = state.copyWith(
+      isLoading: true,
+      postCreated: false,
+      dailyLimitOfPostsExceeded: false,
+    );
+
+    final repostResponse = await quotePost(
+      text: text,
+      authorId: authorId,
+      relatedPostId: relatedPostId,
+    );
+
+    await repostResponse.fold(
       (failure) async {
         if (failure.type == ExceptionType.dailyLimitExceeded) {
           state = state.copyWith(

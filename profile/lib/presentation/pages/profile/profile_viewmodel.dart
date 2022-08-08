@@ -75,11 +75,15 @@ class ProfileViewModel extends IProfileViewModel {
 
   @override
   Future<void> createNewPost(String text) async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(
+      isLoading: true,
+      postCreated: false,
+      dailyLimitOfPostsExceeded: false,
+    );
 
     final createPostResponse = await createPost(
       text: text,
-      userId: userId,
+      userId: state.user!.id,
     );
 
     createPostResponse.fold(
@@ -91,7 +95,7 @@ class ProfileViewModel extends IProfileViewModel {
           );
         }
       },
-      (r) async => await loadUser(userId),
+      (r) async => await loadUser(state.user!.id),
     );
 
     state = state.copyWith(isLoading: false);

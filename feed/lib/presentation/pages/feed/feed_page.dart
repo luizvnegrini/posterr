@@ -50,6 +50,7 @@ class FeedPage extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextFormField(
+                        autofocus: true,
                         controller: controller,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
@@ -108,6 +109,7 @@ class FeedPage extends HookConsumerWidget {
                               break;
                             case PostType.repost:
                               postWidget = RepostWidget(
+                                authorUsername: post.author.username,
                                 relatedPostAuthorUsername:
                                     post.relatedPost!.author.username,
                                 relatedPostCreationDate:
@@ -140,13 +142,19 @@ class FeedPage extends HookConsumerWidget {
                                   postWidget,
                                   Align(
                                     child: Row(
-                                      children: const [
-                                        Spacer(),
+                                      children: [
+                                        const Spacer(),
                                         IconButton(
-                                          onPressed: null,
-                                          icon: Icon(Icons.refresh),
+                                          onPressed: post.type !=
+                                                  PostType.repost
+                                              ? () => viewModel.executeRepost(
+                                                    authorId: post.author.id,
+                                                    relatedPostId: post.id,
+                                                  )
+                                              : null,
+                                          icon: const Icon(Icons.refresh),
                                         ),
-                                        IconButton(
+                                        const IconButton(
                                           onPressed: null,
                                           icon: Icon(Icons.format_quote),
                                         ),

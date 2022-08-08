@@ -11,6 +11,7 @@ class UserImageContainerWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey,

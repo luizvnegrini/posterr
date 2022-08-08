@@ -1,22 +1,24 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:shared/shared.dart';
 
-abstract class ICreatePost {
+abstract class IQuotePost {
   Future<Either<PostFailure, Unit>> call({
     required String text,
-    required int userId,
+    required int relatedPostId,
+    required int authorId,
   });
 }
 
-class CreatePost implements ICreatePost {
+class QuotePost implements IQuotePost {
   final IUserRepository _repository;
 
-  CreatePost(this._repository);
+  QuotePost(this._repository);
 
   @override
   Future<Either<PostFailure, Unit>> call({
     required String text,
-    required int userId,
+    required int relatedPostId,
+    required int authorId,
   }) async {
     try {
       final usersResponse = await _repository.fetchUsers();
@@ -25,7 +27,7 @@ class CreatePost implements ICreatePost {
           PostFailure(type: ExceptionType.notFound),
         ),
         (users) async {
-          final user = users.firstWhere((element) => element.id == userId);
+          final user = users.firstWhere((element) => element.id == authorId);
           int totalPosts = 0;
 
           if (user.posts
@@ -41,10 +43,12 @@ class CreatePost implements ICreatePost {
           }
 
           user.posts.add(
-            Post.original(
+            Post.quote(
+              text: text,
               author: user,
               creationDate: DateTime.now(),
-              text: text,
+              relatedPost:
+                  user.posts.firstWhere((post) => post.id == relatedPostId),
               id: totalPosts + 1,
             ),
           );

@@ -108,19 +108,19 @@ class SeedInitialData {
             ),
             Post.repost(
               id: 7,
-              author: users[1],
+              author: user,
               relatedPost: users[1].posts[0],
               creationDate: now.add(const Duration(days: -4)),
             ),
             Post.repost(
               id: 8,
-              author: users[2],
+              author: user,
               relatedPost: users[2].posts[0],
               creationDate: now.add(const Duration(days: -5)),
             ),
             Post.repost(
               id: 9,
-              author: users[3],
+              author: user,
               relatedPost: users[3].posts[0],
               creationDate: now.add(const Duration(days: -6)),
             ),

@@ -85,6 +85,7 @@ class ProfilePage extends HookConsumerWidget {
                         ),
                         defaultSpacer,
                         TextFormField(
+                            autofocus: true,
                             controller: controller,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -189,6 +190,7 @@ class ProfilePage extends HookConsumerWidget {
                                   final post = reposts[index];
 
                                   return RepostWidget(
+                                    authorUsername: post.author.username,
                                     relatedPostAuthorUsername:
                                         post.relatedPost!.author.username,
                                     relatedPostCreationDate:

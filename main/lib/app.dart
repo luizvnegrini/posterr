@@ -47,6 +47,8 @@ class _App extends StatelessWidget {
               fetchPosts.overrideWithValue(state.mainDependencies.fetchPosts),
               createPost.overrideWithValue(state.sharedDependencies.createPost),
               fetchUser.overrideWithValue(state.profileDependencies.fetchUser),
+              repost.overrideWithValue(state.mainDependencies.repost),
+              quotePost.overrideWithValue(state.mainDependencies.quotePost),
             ],
             child: const AppLoadedRoot(),
           ),
