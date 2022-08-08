@@ -19,13 +19,6 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = readFeedViewModel(ref);
     final controller = useTextEditingController();
-    final state = useFeedState(ref);
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (state.dailyLimitOfPostsExceeded) {
-        await _openBottomSheet(context);
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -38,6 +31,14 @@ class FeedPage extends HookConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: HookConsumer(
               builder: (context, ref, child) {
+                final state = useFeedState(ref);
+
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                  if (state.dailyLimitOfPostsExceeded) {
+                    await _openBottomSheet(context);
+                  }
+                });
+
                 if (state.postCreated) {
                   controller.text = '';
                 }
