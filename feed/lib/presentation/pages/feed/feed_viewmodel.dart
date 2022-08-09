@@ -27,7 +27,10 @@ abstract class IFeedViewModel extends ViewModel<IFeedState> {
   abstract final int userId;
   Future<void> loadUserFeed();
   Future<void> loadPostSettings();
-  Future<void> createNewPost(String text);
+  Future<void> createNewPost(
+    String text,
+    int userId,
+  );
   Future<void> executeRepost({
     required int relatedPostId,
     required int authorId,
@@ -35,10 +38,11 @@ abstract class IFeedViewModel extends ViewModel<IFeedState> {
   Future<void> executeQuotePost({
     required String text,
     required int relatedPostId,
-    required int authorId,
+    required int userId,
   });
   Future<void> loadUser(int userId);
-  void checkIsPostFormValid(String text);
+  void mentionPost(Post postToMention);
+  void removeQuote();
 }
 
 class FeedViewModel extends IFeedViewModel {
@@ -115,12 +119,10 @@ class FeedViewModel extends IFeedViewModel {
   }
 
   @override
-  void checkIsPostFormValid(String text) => state = state.copyWith(
-      isPostFormValid: text.length >= state.postSettings!.minLength &&
-          text.length <= state.postSettings!.maxLength);
-
-  @override
-  Future<void> createNewPost(String text) async {
+  Future<void> createNewPost(
+    String text,
+    int userId,
+  ) async {
     state = state.copyWith(
       isLoading: true,
       postCreated: false,
@@ -129,7 +131,7 @@ class FeedViewModel extends IFeedViewModel {
 
     final createPostResponse = await createPost(
       text: text,
-      userId: state.user!.id,
+      userId: userId,
     );
 
     await createPostResponse.fold(
@@ -185,7 +187,7 @@ class FeedViewModel extends IFeedViewModel {
   Future<void> executeQuotePost({
     required String text,
     required int relatedPostId,
-    required int authorId,
+    required int userId,
   }) async {
     state = state.copyWith(
       isLoading: true,
@@ -195,7 +197,7 @@ class FeedViewModel extends IFeedViewModel {
 
     final repostResponse = await quotePost(
       text: text,
-      authorId: authorId,
+      userId: userId,
       relatedPostId: relatedPostId,
     );
 
@@ -214,4 +216,11 @@ class FeedViewModel extends IFeedViewModel {
       },
     );
   }
+
+  @override
+  void mentionPost(Post postToMention) =>
+      state = state.copyWith(postToMention: postToMention);
+
+  @override
+  void removeQuote() => state = state.copyWith(postToMention: null);
 }

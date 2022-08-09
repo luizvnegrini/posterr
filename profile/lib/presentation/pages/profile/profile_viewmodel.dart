@@ -23,7 +23,6 @@ abstract class IProfileViewModel extends ViewModel<IProfileState> {
   Future<void> loadUser(int userId);
   Future<void> createNewPost(String text);
   Future<void> loadPostSettings();
-  void checkIsPostFormValid(String text);
 }
 
 class ProfileViewModel extends IProfileViewModel {
@@ -67,11 +66,6 @@ class ProfileViewModel extends IProfileViewModel {
       },
     );
   }
-
-  @override
-  void checkIsPostFormValid(String text) => state = state.copyWith(
-      isPostFormValid: text.length >= state.postSettings!.minLength &&
-          text.length <= state.postSettings!.maxLength);
 
   @override
   Future<void> createNewPost(String text) async {

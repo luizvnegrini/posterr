@@ -44,7 +44,7 @@ class QuotedPostWidget extends HookWidget {
               ),
               defaultSizedBox,
               Expanded(
-                flex: 6,
+                flex: 7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -5,7 +5,7 @@ abstract class IQuotePost {
   Future<Either<PostFailure, Unit>> call({
     required String text,
     required int relatedPostId,
-    required int authorId,
+    required int userId,
   });
 }
 
@@ -18,7 +18,7 @@ class QuotePost implements IQuotePost {
   Future<Either<PostFailure, Unit>> call({
     required String text,
     required int relatedPostId,
-    required int authorId,
+    required int userId,
   }) async {
     try {
       final usersResponse = await _repository.fetchUsers();
@@ -27,7 +27,7 @@ class QuotePost implements IQuotePost {
           PostFailure(type: ExceptionType.notFound),
         ),
         (users) async {
-          final user = users.firstWhere((element) => element.id == authorId);
+          final user = users.firstWhere((element) => element.id == userId);
           int totalPosts = 0;
 
           if (user.posts
@@ -47,8 +47,11 @@ class QuotePost implements IQuotePost {
               text: text,
               author: user,
               creationDate: DateTime.now(),
-              relatedPost:
-                  user.posts.firstWhere((post) => post.id == relatedPostId),
+              relatedPost: users
+                  .firstWhere((element) => element.posts
+                      .any((element) => element.id == relatedPostId))
+                  .posts
+                  .firstWhere((post) => post.id == relatedPostId),
               id: totalPosts + 1,
             ),
           );

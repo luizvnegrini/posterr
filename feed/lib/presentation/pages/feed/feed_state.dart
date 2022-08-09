@@ -5,19 +5,19 @@ abstract class IFeedState extends ViewModelState {
   abstract final List<Post>? feedItems;
   abstract final PostSettings? postSettings;
   abstract final bool isLoading;
-  abstract final bool isPostFormValid;
   abstract final bool dailyLimitOfPostsExceeded;
   abstract final bool postCreated;
+  abstract final Post? postToMention;
   abstract final User? user;
 
   IFeedState copyWith({
     List<Post>? feed,
     bool? isLoading,
-    bool? isPostFormValid,
     bool? postCreated,
     PostSettings? postSettings,
     User? user,
     bool? dailyLimitOfPostsExceeded,
+    Post? postToMention,
   });
 }
 
@@ -26,8 +26,8 @@ class FeedState extends IFeedState {
     this.feedItems,
     this.postSettings,
     this.user,
+    this.postToMention,
     this.isLoading = false,
-    this.isPostFormValid = false,
     this.postCreated = false,
     this.dailyLimitOfPostsExceeded = false,
   });
@@ -39,17 +39,15 @@ class FeedState extends IFeedState {
         feedItems,
         postSettings,
         isLoading,
-        isPostFormValid,
         postCreated,
         user,
         dailyLimitOfPostsExceeded,
+        postToMention,
       ];
   @override
   final List<Post>? feedItems;
   @override
   final bool isLoading;
-  @override
-  final bool isPostFormValid;
   @override
   final bool postCreated;
   @override
@@ -58,26 +56,28 @@ class FeedState extends IFeedState {
   final User? user;
   @override
   final bool dailyLimitOfPostsExceeded;
+  @override
+  final Post? postToMention;
 
   @override
   IFeedState copyWith({
     feed,
     isLoading,
     postSettings,
-    isPostFormValid,
     postCreated,
     currentBottomNavBarIndex,
     user,
     dailyLimitOfPostsExceeded,
+    postToMention,
   }) =>
       FeedState(
         feedItems: feed ?? feedItems,
         isLoading: isLoading ?? this.isLoading,
-        isPostFormValid: isPostFormValid ?? this.isPostFormValid,
         postCreated: postCreated ?? this.postCreated,
         postSettings: postSettings ?? this.postSettings,
         user: user ?? this.user,
         dailyLimitOfPostsExceeded:
             dailyLimitOfPostsExceeded ?? this.dailyLimitOfPostsExceeded,
+        postToMention: postToMention,
       );
 }

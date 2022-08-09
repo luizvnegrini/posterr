@@ -9,11 +9,6 @@ class ProfilePage extends HookConsumerWidget {
 
   SizedBox get defaultSpacer => const SizedBox(height: 20);
   final dateFormat = DateFormat.yMMMMd();
-  String? _errorText(
-    String text,
-    IProfileState state,
-  ) =>
-      text.isEmpty || state.isPostFormValid ? null : 'Invalid post';
   EdgeInsets get defaultPadding => const EdgeInsets.symmetric(horizontal: 16);
   TextStyle get joinedDateStyle => TextStyle(
         color: Colors.grey.withOpacity(.6),
@@ -84,57 +79,31 @@ class ProfilePage extends HookConsumerWidget {
                           ],
                         ),
                         defaultSpacer,
-                        TextFormField(
-                            autofocus: true,
-                            controller: controller,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                              labelText: 'Create new post',
-                              hintText: 'What\'s happening?',
-                              errorText: _errorText(controller.text, state),
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  if (_errorText(controller.text, state) ==
-                                      null) {
-                                    _submit(
-                                      context,
-                                      controller,
-                                      viewModel,
-                                      state,
-                                      controller.text,
-                                    );
-
-                                    if (state.postCreated) {
-                                      controller.clear();
-                                    }
-                                  }
-                                },
-                                child: const Icon(
-                                  Icons.send,
-                                ),
-                              ),
+                        PostFormWidget(
+                          controller: controller,
+                          onFieldSubmitted: (text) => _submit(
+                            context,
+                            controller,
+                            viewModel,
+                            state,
+                            text,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () => _submit(
+                              context,
+                              controller,
+                              viewModel,
+                              state,
+                              controller.text,
                             ),
-                            maxLength: state.postSettings!.maxLength,
-                            minLines: 1,
-                            maxLines: 3,
-                            onChanged: viewModel.checkIsPostFormValid,
-                            keyboardType: TextInputType.text,
-                            enabled: !state.isLoading,
-                            onFieldSubmitted: (text) {
-                              if (_errorText(controller.text, state) == null) {
-                                _submit(
-                                  context,
-                                  controller,
-                                  viewModel,
-                                  state,
-                                  text,
-                                );
-                                if (state.postCreated) {
-                                  controller.clear();
-                                }
-                              }
-                            }),
+                            child: const Icon(
+                              Icons.send,
+                            ),
+                          ),
+                          validator: (text) => _validate(text, state),
+                          enabled: !state.isLoading,
+                          maxLength: state.postSettings!.maxLength,
+                        ),
                         defaultSpacer,
                         TabBar(
                           controller: tabController,
@@ -249,6 +218,29 @@ class ProfilePage extends HookConsumerWidget {
     );
   }
 
+  String? _validate(
+    String? text,
+    IProfileState state,
+  ) {
+    if (text == null || text.isEmpty) return null;
+
+    final isValid = checkIsFormValid(text, state);
+
+    if (isValid) return null;
+
+    return 'Invalid post';
+  }
+
+  bool checkIsFormValid(
+    String? text,
+    IProfileState state,
+  ) =>
+      (text != null && text.isNotEmpty) &&
+              (text.length >= state.postSettings!.minLength &&
+                  text.length <= state.postSettings!.maxLength)
+          ? true
+          : false;
+
   void _submit(
     BuildContext context,
     TextEditingController controller,
@@ -256,7 +248,7 @@ class ProfilePage extends HookConsumerWidget {
     IProfileState state,
     String text,
   ) {
-    if (state.isPostFormValid) {
+    if (checkIsFormValid(text, state)) {
       viewModel.createNewPost(text).then((_) => controller.clear());
     }
   }

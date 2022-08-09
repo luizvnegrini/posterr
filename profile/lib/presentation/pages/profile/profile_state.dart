@@ -5,7 +5,6 @@ abstract class IProfileState extends ViewModelState {
   abstract final User? user;
   abstract final bool isLoading;
   abstract final PostSettings? postSettings;
-  abstract final bool isPostFormValid;
   abstract final bool postCreated;
   abstract final bool dailyLimitOfPostsExceeded;
 
@@ -13,7 +12,6 @@ abstract class IProfileState extends ViewModelState {
     User? user,
     bool? isLoading,
     PostSettings? postSettings,
-    bool? isPostFormValid,
     bool? postCreated,
     bool? dailyLimitOfPostsExceeded,
   });
@@ -24,7 +22,6 @@ class ProfileState extends IProfileState {
     this.user,
     this.postSettings,
     this.isLoading = false,
-    this.isPostFormValid = false,
     this.postCreated = false,
     this.dailyLimitOfPostsExceeded = false,
   });
@@ -37,15 +34,12 @@ class ProfileState extends IProfileState {
         postCreated,
         isLoading,
         postSettings,
-        isPostFormValid,
         dailyLimitOfPostsExceeded,
       ];
   @override
   final bool isLoading;
   @override
   final PostSettings? postSettings;
-  @override
-  final bool isPostFormValid;
   @override
   final bool postCreated;
   @override
@@ -58,7 +52,6 @@ class ProfileState extends IProfileState {
     user,
     isLoading,
     postSettings,
-    isPostFormValid,
     postCreated,
     dailyLimitOfPostsExceeded,
   }) =>
@@ -66,7 +59,6 @@ class ProfileState extends IProfileState {
         user: user ?? this.user,
         isLoading: isLoading ?? this.isLoading,
         postSettings: postSettings ?? this.postSettings,
-        isPostFormValid: isPostFormValid ?? this.isPostFormValid,
         postCreated: postCreated ?? this.postCreated,
         dailyLimitOfPostsExceeded:
             dailyLimitOfPostsExceeded ?? this.dailyLimitOfPostsExceeded,

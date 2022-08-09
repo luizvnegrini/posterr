@@ -9,11 +9,6 @@ class FeedPage extends HookConsumerWidget {
   const FeedPage({Key? key}) : super(key: key);
 
   String get _title => 'Feed';
-  String? _errorText(
-    String text,
-    IFeedState state,
-  ) =>
-      text.isEmpty || state.isPostFormValid ? null : 'Invalid post';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,56 +41,67 @@ class FeedPage extends HookConsumerWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                        autofocus: true,
+                    if (state.postToMention == null)
+                      PostFormWidget(
                         controller: controller,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        decoration: InputDecoration(
-                          labelText: 'Create new post',
-                          hintText: 'What\'s happening?',
-                          errorText: _errorText(controller.text, state),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              if (_errorText(controller.text, state) == null) {
-                                _submit(
-                                  context,
-                                  controller,
-                                  viewModel,
-                                  state,
-                                  controller.text,
-                                );
-
-                                if (state.postCreated) {
-                                  controller.clear();
-                                }
-                              }
-                            },
-                            child: const Icon(
-                              Icons.send,
-                            ),
+                        onFieldSubmitted: (text) => _submit(
+                          context,
+                          controller,
+                          viewModel,
+                          state,
+                          text,
+                        ),
+                        suffixIcon: GestureDetector(
+                          onTap: () => _submit(
+                            context,
+                            controller,
+                            viewModel,
+                            state,
+                            controller.text,
+                          ),
+                          child: const Icon(
+                            Icons.send,
                           ),
                         ),
-                        maxLength: state.postSettings!.maxLength,
-                        minLines: 1,
-                        maxLines: 3,
-                        onChanged: viewModel.checkIsPostFormValid,
-                        keyboardType: TextInputType.text,
+                        validator: (text) => _validate(text, state),
                         enabled: !state.isLoading,
-                        onFieldSubmitted: (text) {
-                          if (_errorText(controller.text, state) == null) {
-                            _submit(
-                              context,
-                              controller,
-                              viewModel,
-                              state,
-                              text,
-                            );
-                            if (state.postCreated) {
-                              controller.clear();
-                            }
-                          }
-                        }),
+                        maxLength: state.postSettings!.maxLength,
+                      ),
+                    if (state.postToMention != null)
+                      PostFormWidget.quote(
+                        controller: controller,
+                        onFieldSubmitted: (text) => _submit(
+                          context,
+                          controller,
+                          viewModel,
+                          state,
+                          text,
+                        ),
+                        suffixIcon: GestureDetector(
+                          onTap: () => _submit(
+                            context,
+                            controller,
+                            viewModel,
+                            state,
+                            controller.text,
+                          ),
+                          child: const Icon(
+                            Icons.send,
+                          ),
+                        ),
+                        validator: (text) => _validate(text, state),
+                        enabled: !state.isLoading,
+                        maxLength: state.postSettings!.maxLength,
+                        postToMentionCreationDate:
+                            state.postToMention!.creationDate,
+                        postToMentionText: state.postToMention!.text,
+                        postToMentionUsername:
+                            state.postToMention!.author.username,
+                        removeQuote: viewModel.removeQuote,
+                      ),
+                    const Divider(height: 40),
                     Expanded(
+                      flex: 3,
                       child: ListView.separated(
                         itemBuilder: (context, index) {
                           final post = state.feedItems![index];
@@ -157,9 +163,12 @@ class FeedPage extends HookConsumerWidget {
                                               : null,
                                           icon: const Icon(Icons.refresh),
                                         ),
-                                        const IconButton(
-                                          onPressed: null,
-                                          icon: Icon(Icons.format_quote),
+                                        IconButton(
+                                          onPressed: post.type == PostType.post
+                                              ? () =>
+                                                  viewModel.mentionPost(post)
+                                              : null,
+                                          icon: const Icon(Icons.format_quote),
                                         ),
                                       ],
                                     ),
@@ -183,6 +192,29 @@ class FeedPage extends HookConsumerWidget {
     );
   }
 
+  bool checkIsFormValid(
+    String? text,
+    IFeedState state,
+  ) =>
+      (text != null && text.isNotEmpty) &&
+              (text.length >= state.postSettings!.minLength &&
+                  text.length <= state.postSettings!.maxLength)
+          ? true
+          : false;
+
+  String? _validate(
+    String? text,
+    IFeedState state,
+  ) {
+    if (text == null || text.isEmpty) return null;
+
+    final isValid = checkIsFormValid(text, state);
+
+    if (isValid) return null;
+
+    return 'Invalid post';
+  }
+
   void _submit(
     BuildContext context,
     TextEditingController controller,
@@ -190,8 +222,23 @@ class FeedPage extends HookConsumerWidget {
     IFeedState state,
     String text,
   ) {
-    if (state.isPostFormValid) {
-      viewModel.createNewPost(text).then((_) => controller.clear());
+    if (checkIsFormValid(text, state)) {
+      if (state.postToMention != null) {
+        viewModel
+            .executeQuotePost(
+              text: text,
+              relatedPostId: state.postToMention!.id,
+              userId: state.user!.id,
+            )
+            .then((_) => controller.clear());
+        return;
+      }
+      viewModel
+          .createNewPost(
+            text,
+            state.user!.id,
+          )
+          .then((_) => controller.clear());
     }
   }
 
