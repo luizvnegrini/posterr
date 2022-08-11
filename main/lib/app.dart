@@ -55,7 +55,7 @@ class _App extends StatelessWidget {
           orElse: () => MaterialApp(
             title: appTitle,
             theme: ThemeData(
-              primarySwatch: Colors.green,
+              primarySwatch: Colors.orange,
               useMaterial3: true,
             ),
             localizationsDelegates: const [
@@ -64,10 +64,30 @@ class _App extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             home: _flavorBanner(
-              child: Container(
-                color: Theme.of(context).colorScheme.onBackground,
-                child: const Center(
-                  child: Text('Alterar por uma imagem ou animação'),
+              child: Scaffold(
+                body: Container(
+                  alignment: Alignment.center,
+                  color: Colors.orange,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Posterr',
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Loading dependencies...',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white.withOpacity(.6),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               show: kDebugMode,
