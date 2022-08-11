@@ -84,38 +84,47 @@ class QuotedPostWidget extends HookWidget {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                children: const [
-                                  UserImageContainerWidget(size: 15),
-                                ],
+                              Flexible(
+                                flex: 1,
+                                child: Column(
+                                  children: const [
+                                    UserImageContainerWidget(size: 15),
+                                  ],
+                                ),
                               ),
                               defaultSizedBox,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        relatedPostAuthorUsername,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
+                              Flexible(
+                                flex: 8,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          relatedPostAuthorUsername,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 10,
+                                          ),
                                         ),
-                                      ),
-                                      defaultSizedBox,
-                                      const Text('·'),
-                                      defaultSizedBox,
-                                      Text(
-                                        '${postDateFormatter.format(relatedPostCreationDate)} at ${(relatedPostCreationDate.hour).toString().padLeft(2, '0')}:${(relatedPostCreationDate.minute).toString().padLeft(2, '0')}:${(relatedPostCreationDate.second).toString().padLeft(2, '0')}',
-                                        style: creationDateStyle.copyWith(
-                                            fontSize: 8),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(relatedPostText)
-                                ],
+                                        defaultSizedBox,
+                                        const Text('·'),
+                                        defaultSizedBox,
+                                        Expanded(
+                                          child: Text(
+                                            '${postDateFormatter.format(relatedPostCreationDate)} at ${(relatedPostCreationDate.hour).toString().padLeft(2, '0')}:${(relatedPostCreationDate.minute).toString().padLeft(2, '0')}:${(relatedPostCreationDate.second).toString().padLeft(2, '0')}',
+                                            style: creationDateStyle.copyWith(
+                                                fontSize: 8),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(relatedPostText)
+                                  ],
+                                ),
                               ),
                             ],
                           ),

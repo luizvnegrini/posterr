@@ -85,11 +85,15 @@ class ProfileViewModel extends IProfileViewModel {
         if (failure.type == ExceptionType.dailyLimitExceeded) {
           state = state.copyWith(
             dailyLimitOfPostsExceeded: true,
+            postCreated: false,
             isLoading: false,
           );
         }
       },
-      (r) async => await loadUser(state.user!.id),
+      (r) async {
+        state = state.copyWith(postCreated: true);
+        await loadUser(state.user!.id);
+      },
     );
 
     state = state.copyWith(isLoading: false);

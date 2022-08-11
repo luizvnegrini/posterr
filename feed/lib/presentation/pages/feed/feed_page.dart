@@ -28,6 +28,20 @@ class FeedPage extends HookConsumerWidget {
               builder: (context, ref, child) {
                 final state = useFeedState(ref);
 
+                if (state.postCreated) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    ((timeStamp) => showSnackBar(
+                          ref,
+                          const SnackBar(
+                            elevation: .8,
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('Post created with success!'),
+                          ),
+                        )),
+                  );
+                }
+
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                   if (state.dailyLimitOfPostsExceeded) {
                     await _openBottomSheet(context);

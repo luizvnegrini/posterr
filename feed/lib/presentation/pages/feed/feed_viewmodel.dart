@@ -218,8 +218,10 @@ class FeedViewModel extends IFeedViewModel {
   }
 
   @override
-  void mentionPost(Post postToMention) =>
-      state = state.copyWith(postToMention: postToMention);
+  void mentionPost(Post postToMention) => state = state.copyWith(
+        postToMention: postToMention,
+        postCreated: false,
+      );
 
   @override
   void removeQuote() => state = state.copyWith(postToMention: null);

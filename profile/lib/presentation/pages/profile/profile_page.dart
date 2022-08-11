@@ -30,6 +30,20 @@ class ProfilePage extends HookConsumerWidget {
                 if (state.dailyLimitOfPostsExceeded) {
                   await _openBottomSheet(context);
                 }
+
+                if (state.postCreated) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    ((timeStamp) => showSnackBar(
+                          ref,
+                          const SnackBar(
+                            elevation: .8,
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('Post created with success!'),
+                          ),
+                        )),
+                  );
+                }
               });
 
               final posts = state.user!.posts
