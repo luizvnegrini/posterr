@@ -28,9 +28,6 @@ class Repost implements IRepost {
         ),
         (users) async {
           final user = users.firstWhere((element) => element.id == userId);
-          final relatedPostAuthor =
-              users.firstWhere((element) => element.id == relatedPostAuthorId);
-          int totalPosts = 0;
 
           if (user.posts
                   .where((x) =>
@@ -39,6 +36,10 @@ class Repost implements IRepost {
               5) {
             throw PostFailure(type: ExceptionType.dailyLimitExceeded);
           }
+
+          final relatedPostAuthor =
+              users.firstWhere((element) => element.id == relatedPostAuthorId);
+          int totalPosts = 0;
 
           for (var user in users) {
             totalPosts += user.posts.length;

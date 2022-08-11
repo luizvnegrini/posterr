@@ -15,4 +15,8 @@ dependencies:
     path: ../design_system
 
 dev_dependencies:
+  faker: ^2.0.0
+  mocktail: ^0.3.0
+  flutter_test:
+    sdk: flutter
   flutter_lints: ^2.0.1
