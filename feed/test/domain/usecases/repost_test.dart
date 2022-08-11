@@ -21,11 +21,11 @@ void main() {
     final user = UserFactory.makeUser();
     final now = DateTime.now();
     user.updatePosts(<Post>[
-      PostFactory.makeOriginalPost(user, now),
-      PostFactory.makeOriginalPost(user, now),
-      PostFactory.makeOriginalPost(user, now),
-      PostFactory.makeOriginalPost(user, now),
-      PostFactory.makeOriginalPost(user, now),
+      PostFactory.makeOriginalPost(user, creationDate: now),
+      PostFactory.makeOriginalPost(user, creationDate: now),
+      PostFactory.makeOriginalPost(user, creationDate: now),
+      PostFactory.makeOriginalPost(user, creationDate: now),
+      PostFactory.makeOriginalPost(user, creationDate: now),
     ]);
 
     when(spy.fetchUsers).thenAnswer((_) async => Right(<User>[user]));
@@ -37,5 +37,30 @@ void main() {
     );
 
     expect(Left(PostFailure(type: ExceptionType.dailyLimitExceeded)), result);
+  });
+
+  test('should save repost on user posts', () async {
+    final user = UserFactory.makeUser();
+    final userToMention = UserFactory.makeUser();
+    final postToMention = PostFactory.makeOriginalPost(userToMention);
+    userToMention.updatePosts(<Post>[
+      postToMention,
+    ]);
+    final users = <User>[user, userToMention];
+
+    when(spy.fetchUsers).thenAnswer(
+      (_) async => Right(users),
+    );
+    when(() => spy.saveUsers(users))
+        .thenAnswer((invocation) async => const Right(unit));
+
+    final result = await sut(
+      relatedPostAuthorId: userToMention.id,
+      relatedPostId: postToMention.id,
+      userId: user.id,
+    );
+
+    verify(() => spy.saveUsers(users));
+    expect(const Right(unit), result);
   });
 }
