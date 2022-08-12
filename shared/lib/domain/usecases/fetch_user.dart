@@ -16,12 +16,14 @@ class FetchUser implements IFetchUser {
       final response = await _repository.fetchUsers();
 
       final user = response.fold<User>(
-        (l) => throw Exception(),
+        (failure) => throw failure,
         (users) => users.firstWhere((user) => user.id == userId),
       );
 
       return Right(user);
-    } catch (e) {
+    } on BaseException catch (e) {
+      return Left(UserFailure(type: e.type));
+    } on Exception {
       return Left(UserFailure(type: ExceptionType.serverError));
     }
   }
