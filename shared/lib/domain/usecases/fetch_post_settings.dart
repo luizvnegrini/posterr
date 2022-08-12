@@ -13,5 +13,5 @@ class FetchPostSettings implements IFetchPostSettings {
 
   @override
   Future<Either<PostSettingsFailure, PostSettings?>> call() async =>
-      _repository.fetchSettings();
+      await _repository.fetchSettings();
 }
