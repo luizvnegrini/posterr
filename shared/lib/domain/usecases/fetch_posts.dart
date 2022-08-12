@@ -2,7 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:shared/shared.dart';
 
 abstract class IFetchPosts {
-  Future<Either<UserFailure, List<Post>>> call();
+  Future<Either<PostFailure, List<Post>>> call();
 }
 
 class FetchPosts implements IFetchPosts {
@@ -11,7 +11,7 @@ class FetchPosts implements IFetchPosts {
   FetchPosts(this._repository);
 
   @override
-  Future<Either<UserFailure, List<Post>>> call() async {
+  Future<Either<PostFailure, List<Post>>> call() async {
     try {
       final response = await _repository.fetchUsers();
 
@@ -24,14 +24,20 @@ class FetchPosts implements IFetchPosts {
             posts.addAll(user.posts);
           }
 
+          if (posts.isEmpty) {
+            throw PostFailure(type: ExceptionType.notFound);
+          }
+
           posts.sort((a, b) => b.creationDate.compareTo(a.creationDate));
           return posts;
         },
       );
 
       return Right(allPosts);
-    } catch (e) {
-      return Left(UserFailure(type: ExceptionType.serverError));
+    } on BaseException catch (e) {
+      return Left(PostFailure(type: e.type));
+    } on Exception {
+      return Left(PostFailure(type: ExceptionType.serverError));
     }
   }
 }
