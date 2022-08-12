@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:shared/shared.dart';
 
 class PostSettingsRepository implements IPostSettingsRepository {
+  @override
   final String key = 'settings';
   final ILocalStorageDataSource _localStorageDataSource;
 

@@ -26,25 +26,25 @@ class ProfilePage extends HookConsumerWidget {
         ? const Center(child: CircularProgressIndicator())
         : Builder(
             builder: (context) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                if (state.dailyLimitOfPostsExceeded) {
-                  await _openBottomSheet(context);
-                }
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) async {
+                  if (state.dailyLimitOfPostsExceeded) {
+                    await _openBottomSheet(context);
+                  }
 
-                if (state.postCreated) {
-                  WidgetsBinding.instance.addPostFrameCallback(
-                    ((timeStamp) => showSnackBar(
-                          ref,
-                          const SnackBar(
-                            elevation: .8,
-                            backgroundColor: Colors.green,
-                            behavior: SnackBarBehavior.floating,
-                            content: Text('Post created with success!'),
-                          ),
-                        )),
-                  );
-                }
-              });
+                  if (state.postCreated) {
+                    showSnackBar(
+                      ref,
+                      const SnackBar(
+                        elevation: .8,
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
+                        content: Text('Post created with success!'),
+                      ),
+                    );
+                  }
+                },
+              );
 
               final posts = state.user!.posts
                   .where((element) => element.type == PostType.post)

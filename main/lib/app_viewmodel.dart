@@ -76,81 +76,81 @@ class SeedInitialData {
 
   Future<void> execute() async {
     final usersResponse = await _fetchUsers();
-    await usersResponse.fold((l) => throw Exception('unable to initialize'),
-        (seedUsers) async {
-      if (seedUsers.isNotEmpty) return;
 
-      final users = <User>[];
-      final posts = <Post>[];
-      final now = DateTime.now();
+    await usersResponse.fold((failure) async {
+      if (failure.type == ExceptionType.notFound) {
+        final users = <User>[];
+        final posts = <Post>[];
+        final now = DateTime.now();
 
-      for (var i = 1; i < 6; i++) {
-        if (i == _userId) {
-          final user = User(
-            id: i,
-            username: 'Luiz Negrini',
-            joinedDate: DateTime(2021, 3, 25),
-          );
+        for (var i = 1; i < 6; i++) {
+          if (i == _userId) {
+            final user = User(
+              id: i,
+              username: 'Luiz Negrini',
+              joinedDate: DateTime(2021, 3, 25),
+            );
 
-          final uPosts = <Post>[
-            Post.original(
-              id: 5,
+            final uPosts = <Post>[
+              Post.original(
+                id: 5,
+                author: user,
+                text: 'Hello! This is my 1 post!!',
+                creationDate: now.add(const Duration(days: -2)),
+              ),
+              Post.quote(
+                id: 6,
+                text: 'This is a quote post',
+                author: user,
+                relatedPost: users[0].posts[0],
+                creationDate: now.add(const Duration(days: -3)),
+              ),
+              Post.repost(
+                id: 7,
+                author: user,
+                relatedPost: users[1].posts[0],
+                creationDate: now.add(const Duration(days: -4)),
+              ),
+              Post.repost(
+                id: 8,
+                author: user,
+                relatedPost: users[2].posts[0],
+                creationDate: now.add(const Duration(days: -5)),
+              ),
+              Post.repost(
+                id: 9,
+                author: user,
+                relatedPost: users[3].posts[0],
+                creationDate: now.add(const Duration(days: -6)),
+              ),
+            ];
+
+            user.updatePosts(uPosts);
+
+            users.add(user);
+            posts.addAll(uPosts);
+          } else {
+            final user = User(
+              id: i,
+              username: 'User gen. $i',
+              joinedDate: DateTime.now(),
+            );
+            final post = Post.original(
+              id: i,
               author: user,
-              text: 'Hello! This is my 1 post!!',
-              creationDate: now.add(const Duration(days: -2)),
-            ),
-            Post.quote(
-              id: 6,
-              text: 'This is a quote post',
-              author: user,
-              relatedPost: users[0].posts[0],
-              creationDate: now.add(const Duration(days: -3)),
-            ),
-            Post.repost(
-              id: 7,
-              author: user,
-              relatedPost: users[1].posts[0],
-              creationDate: now.add(const Duration(days: -4)),
-            ),
-            Post.repost(
-              id: 8,
-              author: user,
-              relatedPost: users[2].posts[0],
-              creationDate: now.add(const Duration(days: -5)),
-            ),
-            Post.repost(
-              id: 9,
-              author: user,
-              relatedPost: users[3].posts[0],
-              creationDate: now.add(const Duration(days: -6)),
-            ),
-          ];
+              text: 'Hello! This is my first post!!',
+              creationDate: now,
+            );
+            user.updatePosts(<Post>[post]);
 
-          user.updatePosts(uPosts);
-
-          users.add(user);
-          posts.addAll(uPosts);
-        } else {
-          final user = User(
-            id: i,
-            username: 'User gen. $i',
-            joinedDate: DateTime.now(),
-          );
-          final post = Post.original(
-            id: i,
-            author: user,
-            text: 'Hello! This is my first post!!',
-            creationDate: now,
-          );
-          user.updatePosts(<Post>[post]);
-
-          users.add(user);
-          posts.add(post);
+            users.add(user);
+            posts.add(post);
+          }
         }
-      }
 
-      await _createUsers(users);
-    });
+        await _createUsers(users);
+      }
+    }, (seedUsers) => null);
 
     final postSettingsResponse = await _fetchPostSettings();
     await postSettingsResponse

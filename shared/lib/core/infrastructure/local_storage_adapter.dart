@@ -8,13 +8,12 @@ class LocalStorageAdapter implements ILocalStorageDataSource {
   LocalStorageAdapter({required this.localStorage});
 
   @override
-  // ignore: avoid_annotating_with_dynamic
   Future<void> save({
     required String key,
     required dynamic value,
   }) async {
     await localStorage.deleteItem(key);
-    await localStorage.setItem(key, value, (object) => object);
+    await localStorage.setItem(key, value);
   }
 
   @override
