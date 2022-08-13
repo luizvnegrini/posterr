@@ -123,6 +123,14 @@ void main() {
     expect(find.text(user.username), findsOneWidget);
   });
 
+  testWidgets('should present all tabs', (tester) async {
+    await waitForPageInitialization(tester, defaultTestWidget);
+
+    expect(find.text('Posts'), findsOneWidget);
+    expect(find.text('Reposts'), findsOneWidget);
+    expect(find.text('Quoted'), findsOneWidget);
+  });
+
   testWidgets('should present tab and list with all user original posts',
       (tester) async {
     await waitForPageInitialization(tester, defaultTestWidget);
@@ -143,19 +151,9 @@ void main() {
     expect(itemTextOnList, findsOneWidget);
   });
 
-  testWidgets('should present all tabs', (tester) async {
-    await waitForPageInitialization(tester, defaultTestWidget);
-
-    expect(find.text('Posts'), findsOneWidget);
-    expect(find.text('Reposts'), findsOneWidget);
-    expect(find.text('Quoted'), findsOneWidget);
-  });
-
   testWidgets('should present tab and list with all user reposts',
       (tester) async {
     await waitForPageInitialization(tester, defaultTestWidget);
-
-    await tester.pump();
 
     final userRepost =
         user.posts.where((post) => post.type == PostType.repost).first;
@@ -179,8 +177,6 @@ void main() {
   testWidgets('should present tab and list with all user quoted posts',
       (tester) async {
     await waitForPageInitialization(tester, defaultTestWidget);
-
-    await tester.pump();
 
     final postToMention =
         user.posts.where((post) => post.type == PostType.quote).first;

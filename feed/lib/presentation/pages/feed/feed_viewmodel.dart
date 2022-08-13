@@ -25,7 +25,7 @@ abstract class IFeedViewModel extends ViewModel<IFeedState> {
   abstract final IQuotePost quotePost;
   abstract final IFetchUser fetchUser;
   abstract final int userId;
-  Future<void> loadUserFeed();
+  Future<void> loadFeed();
   Future<void> loadPostSettings();
   Future<void> createNewPost(
     String text,
@@ -77,7 +77,7 @@ class FeedViewModel extends IFeedViewModel {
 
     state = state.copyWith(isLoading: true);
     await Future.wait([
-      loadUserFeed(),
+      loadFeed(),
       loadPostSettings(),
       loadUser(userId),
     ]);
@@ -85,7 +85,7 @@ class FeedViewModel extends IFeedViewModel {
   }
 
   @override
-  Future<void> loadUserFeed() async {
+  Future<void> loadFeed() async {
     final response = await fetchPosts();
 
     final newState = response.fold<IFeedState>(
@@ -145,7 +145,7 @@ class FeedViewModel extends IFeedViewModel {
       },
       (r) async {
         state = state.copyWith(postCreated: true);
-        await loadUserFeed();
+        await loadFeed();
       },
     );
   }
@@ -178,7 +178,7 @@ class FeedViewModel extends IFeedViewModel {
       },
       (r) async {
         state = state.copyWith(postCreated: true);
-        await loadUserFeed();
+        await loadFeed();
       },
     );
   }
@@ -212,7 +212,7 @@ class FeedViewModel extends IFeedViewModel {
       },
       (r) async {
         state = state.copyWith(postCreated: true);
-        await loadUserFeed();
+        await loadFeed();
       },
     );
   }

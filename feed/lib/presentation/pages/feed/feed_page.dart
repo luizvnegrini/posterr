@@ -21,7 +21,7 @@ class FeedPage extends HookConsumerWidget {
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: viewModel.loadUserFeed,
+          onRefresh: viewModel.loadFeed,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: HookConsumer(
