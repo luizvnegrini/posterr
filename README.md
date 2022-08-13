@@ -1,4 +1,4 @@
-# Posterr
+# Luiz Negrini's Posterr
 
 A new social media like Twitter.
 
@@ -60,6 +60,7 @@ Each flavor has a configuration file inside the folder `base_app/.env`.
 Always run as follows:  
 
 ```bash
+bash scripts.sh -get
 cd base_app
 flutter run -t lib/main-<flavor>.dart --flavor <flavor> 
 ```
