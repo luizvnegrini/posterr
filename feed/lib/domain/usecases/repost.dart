@@ -45,7 +45,7 @@ class Repost implements IRepost {
             totalPosts += user.posts.length;
           }
 
-          relatedPostAuthor.posts.add(
+          user.posts.add(
             Post.repost(
               author: user,
               creationDate: DateTime.now(),
