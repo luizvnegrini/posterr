@@ -13,19 +13,18 @@ class ILocalStorageDatasourceMock extends Mock
 void main() {
   late ILocalStorageDatasourceMock spy;
   late IUserRepository sut;
+  final users = <User>[
+    UserFactory.makeUser(),
+    UserFactory.makeUser(),
+    UserFactory.makeUser(),
+  ];
 
   setUp(() {
     spy = ILocalStorageDatasourceMock();
     sut = UserRepository(spy);
   });
 
-  test('should create config', () async {
-    final users = <User>[
-      UserFactory.makeUser(),
-      UserFactory.makeUser(),
-      UserFactory.makeUser(),
-    ];
-
+  test('should create users', () async {
     when(() => spy.save(
             key: sut.key,
             value: jsonEncode(
@@ -42,26 +41,19 @@ void main() {
     expect(const Right(unit), result);
   });
 
-  test('should fetch config', () async {
-    // final users = <User>[
-    //   UserFactory.makeUser(),
-    //   UserFactory.makeUser(),
-    //   UserFactory.makeUser(),
-    // ];
+  test('should fetch users', () async {
+    when(() => spy.fetch(sut.key)).thenAnswer(
+      (_) => Future.value(
+        jsonEncode(
+          users.map((user) => UserModel.fromEntity(user)).toList(),
+        ),
+      ),
+    );
 
-    // when(() => spy.fetch(sut.key)).thenAnswer((_) => Future.value(
-    //       jsonEncode(
-    //         PostSettingsModel.fromEntity(postSettings),
-    //       ),
-    //     ));
+    final result = await sut.fetchUsers();
 
-    // final result = await sut.fetchSettings();
-
-    // verify(() => spy.fetch(sut.key)).called(1);
-    // result.fold((l) => null, (settings) {
-    //   assert(settings != null);
-    //   assert(settings!.maxLength == postSettings.maxLength);
-    //   assert(settings!.minLength == postSettings.minLength);
-    // });
+    result.fold((l) => null, (usersResult) {
+      expect(users.length, usersResult.length);
+    });
   });
 }
