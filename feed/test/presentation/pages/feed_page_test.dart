@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
+import 'package:faker/faker.dart';
 import 'package:feed/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,7 +51,7 @@ void main() {
       .build();
 
   setUp(() {
-    user = UserFactory.makeUser();
+    user = UserFactory.makeUser(id: userIdSpy);
     user.updatePosts(
       [
         PostFactory.makeOriginalPost(user),
@@ -67,14 +68,16 @@ void main() {
 
     postSettings = PostSettingsFactory.makePostSettings();
 
-    when(() => fetchUserSpy(userIdSpy)).thenAnswer((_) async => Right(user));
+    when(() => fetchUserSpy(userIdSpy))
+        .thenAnswer((_) async => Future.value(Right(user)));
     when(() => fetchPostSettingsSpy())
-        .thenAnswer((_) async => Right(postSettings));
+        .thenAnswer((_) async => Future.value(Right(postSettings)));
     final posts = <Post>[];
     for (var user in users) {
       posts.addAll(user.posts);
     }
-    when(() => fetchPostsSpy()).thenAnswer((_) async => Right(posts));
+    when(() => fetchPostsSpy())
+        .thenAnswer((_) async => Future.value(Right(posts)));
   });
 
   Future<void> waitForPageInitialization(
@@ -137,5 +140,45 @@ void main() {
     }
 
     expect(find.text(user.username), findsWidgets);
+  });
+
+  testWidgets('should crate new post', (tester) async {
+    await waitForPageInitialization(tester, defaultTestWidget);
+    const postText = 'testing post creation';
+
+    when(() => createPostSpy(
+          text: postText,
+          userId: userIdSpy,
+        )).thenAnswer((_) async => Future.value(const Right(unit)));
+
+    final textFormField =
+        find.byType(TextFormField).evaluate().first.widget as TextFormField;
+    final controller = textFormField.controller;
+    controller!.text = postText;
+
+    await tester.tap(find.byType(GestureDetector).at(0));
+
+    verify(() => createPostSpy(
+          text: postText,
+          userId: userIdSpy,
+        )).called(1);
+    verify(() => fetchPostsSpy()).called(2);
+  });
+
+  testWidgets('should not validate post form', (tester) async {
+    await waitForPageInitialization(tester, defaultTestWidget);
+    final postText = faker.randomGenerator.string(1);
+
+    final textFormField =
+        find.byType(TextFormField).evaluate().first.widget as TextFormField;
+    final controller = textFormField.controller;
+    controller!.text = postText;
+
+    await tester.tap(find.byType(GestureDetector).at(0));
+
+    verifyNever(() => createPostSpy(
+          text: postText,
+          userId: userIdSpy,
+        ));
   });
 }

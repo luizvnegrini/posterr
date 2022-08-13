@@ -12,6 +12,9 @@ dependencies:
     path: ../dependencies
 
 dev_dependencies:
+  faker: ^2.0.0
+  flutter_test:
+    sdk: flutter
   flutter_lints: ^2.0.1
 
   
