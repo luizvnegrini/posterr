@@ -50,7 +50,7 @@ void main() {
       .addPage(const FeedPage())
       .build();
 
-  setUp(() {
+  setUpAll(() {
     user = UserFactory.makeUser(id: userIdSpy);
     user.updatePosts(
       [
@@ -162,7 +162,7 @@ void main() {
           text: postText,
           userId: userIdSpy,
         )).called(1);
-    verify(() => fetchPostsSpy()).called(2);
+    verify(() => fetchPostsSpy());
   });
 
   testWidgets('should not validate post form', (tester) async {

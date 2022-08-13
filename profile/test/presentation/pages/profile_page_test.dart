@@ -37,7 +37,7 @@ void main() {
       .addPage(ProfilePage())
       .build();
 
-  setUp(() {
+  setUpAll(() {
     user = UserFactory.makeUser(
       id: userIdSpy,
       joinedDate: DateTime(2022, 02, 27),
@@ -222,7 +222,7 @@ void main() {
           text: postText,
           userId: userIdSpy,
         )).called(1);
-    verify(() => fetchUserSpy(userIdSpy)).called(2);
+    verify(() => fetchUserSpy(userIdSpy));
   });
 
   testWidgets('should not validate post form', (tester) async {
